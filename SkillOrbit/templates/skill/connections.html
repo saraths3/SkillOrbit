@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/skill/connections.css' %}">
+
+    <h2 class="page-title">My Connections</h2>
+
+    {% for connection in connections %}
+      {% if connection.user_one == request.user %}
+            {% if connection.user_two.userprofile.avatar %}
+              <img src="{{ connection.user_two.userprofile.avatar.url }}" alt="{{ connection.user_two.username }}" class="avatar-img">
+            {% else %}
+              <span class="avatar-fallback">{{ connection.user_two.username|slice:":1"|upper }}</span>
+            {% endif %}
+            {% if connection.user_two.full_name %}
+              <strong class="full-name">{{ connection.user_two.full_name }}</strong>
+            {% endif %}
+            <span class="username">@{{ connection.user_two.username }}</span>
+            <span class="email">{{ connection.user_two.email }}</span>
+            <a href="{% url 'public_profile' connection.user_two.id %}" class="btn btn-outline">View Profile</a>
+            <button class="btn btn-secondary" >Chat (Coming Soon)</button>
+            <button class="btn btn-secondary" >Schedule Session (Coming Soon)</button>
+
+      {% elif connection.user_two == request.user %}
+            {% if connection.user_one.userprofile.avatar %}
+              <img src="{{ connection.user_one.userprofile.avatar.url }}" alt="{{ connection.user_one.username }}" class="avatar-img">
+            {% else %}
+              <span class="avatar-fallback">{{ connection.user_one.username|slice:":1"|upper }}</span>
+            {% endif %}
+            {% if connection.user_one.full_name %}
+              <strong class="full-name">{{ connection.user_one.full_name }}</strong>
+            {% endif %}
+            <span class="username">@{{ connection.user_one.username }}</span>
+            <span class="email">{{ connection.user_one.email }}</span>
+            <a href="{% url 'public_profile' connection.user_one.id %}" class="btn btn-outline">View Profile</a>
+            <button class="btn btn-secondary" >Chat (Coming Soon)</button>
+            <button class="btn btn-secondary" >Schedule Session (Coming Soon)</button>
+      {% endif %}
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Skill Request{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/skill/skill_request.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="public-profile-wrapper request-wrapper">
+
+    <!-- Header Section -->
+    <header class="profile-header-card request-card-header">
+        <div class="profile-avatar-container">
+            <div class="public-avatar-fallback request-avatar-badge">
+                <i class="fas fa-handshake"></i>
+            </div>
+        </div>
+
+        <div class="profile-info-stack">
+            <h1>Request Skill Exchange</h1>
+            <span class="profile-handle">
+                <i class="fas fa-exchange-alt"></i> SKILL_REQUEST_FORM
+            </span>
+            <p class="profile-email">
+                <i class="fas fa-info-circle"></i> Submit your details to initiate a new skill request or connection.
+            </p>
+        </div>
+    </header>
+
+    <!-- Form Section -->
+    <section class="profile-skills-section request-form-section">
+        <form action="" method="post" class="styled-django-form">
+            {% csrf_token %}
+            
+            <div class="form-fields-stack">
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span class="required-asterisk">*</span>
+                            {% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <span class="field-help">
+                                <i class="fas fa-info-circle"></i> {{ field.help_text }}
+                            </span>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="field-errors">
+                                {% for error in field.errors %}
+                                    <span class="error-msg">
+                                        <i class="fas fa-exclamation-circle"></i> {{ error }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    {{ form.as_p }}
+                {% endfor %}
+            </div>
+
+            <!-- Submit Button matching the Public Profile Badge Style -->
+            <div class="form-action-footer">
+                <button type="submit" class="profile-skill-badge request-submit-btn">
+                    <span class="skill-name"><i class="fas fa-paper-plane"></i> Send Request</span>
+                    <span class="skill-level-pill"><i class="fas fa-check"></i> SUBMIT</span>
+                </button>
+            </div>
+
+        </form>
+    </section>
+
+</div>
+{% endblock content %}

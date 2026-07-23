@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add New Skill{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/core/add_skill.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="add-skill-wrapper">
+
+    <!-- Navigation Breadcrumb -->
+    <div class="page-header">
+        <a href="{% url 'home' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h1><i class="fas fa-plus-circle"></i> Add a New Skill</h1>
+        <p>Expand your portfolio by adding a skill you can offer or want to learn.</p>
+    </div>
+
+    <!-- Django Messages Alert Pipeline -->
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-info-circle"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Skill Submission Form Workspace -->
+    <section class="form-card">
+        <form method="POST" class="skill-form">
+            {% csrf_token %}
+
+            <!-- Skill Core Selection Row -->
+            <div class="form-group">
+                <label for="{{ form.skill.id_for_label }}">
+                    <i class="fas fa-tag"></i> Select Skill
+                    <span class="required-asterisk">*</span>
+                </label>
+                {{ form.skill }}
+                {% if form.skill.errors %}
+                    <span class="field-error">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.skill.errors|striptags }}
+                    </span>
+                {% endif %}
+                <small class="form-help">
+                    <i class="fas fa-info-circle"></i> Can't find your skill? Contact support to get it added.
+                </small>
+            </div>
+
+            <!-- Proficiency Level Dropdown -->
+            <div class="form-group">
+                <label for="{{ form.proficiency.id_for_label }}">
+                    <i class="fas fa-level-up-alt"></i> Proficiency Level
+                    <span class="required-asterisk">*</span>
+                </label>
+                {{ form.proficiency }}
+                {% if form.proficiency.errors %}
+                    <span class="field-error">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.proficiency.errors|striptags }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <!-- Numerical Field: Experience Years -->
+            <div class="form-group">
+                <label for="{{ form.years_of_experience.id_for_label }}">
+                    <i class="fas fa-clock"></i> Years of Experience
+                </label>
+                {{ form.years_of_experience }}
+                {% if form.years_of_experience.errors %}
+                    <span class="field-error">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.years_of_experience.errors|striptags }}
+                    </span>
+                {% endif %}
+                <small class="form-help">
+                    <i class="fas fa-info-circle"></i> Leave empty if you are just starting to learn this skill.
+                </small>
+            </div>
+
+            <!-- Form Interaction Actions Row -->
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-plus-circle"></i> Add to Portfolio
+                </button>
+                <a href="{% url 'home' %}" class="btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+
+        </form>
+    </section>
+
+</div>
+{% endblock %}

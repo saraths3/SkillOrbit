@@ -1,0 +1,554 @@
+/* ===== REQUEST WRAPPER ===== */
+.request-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ===== REQUEST CARD HEADER ===== */
+.request-card-header {
+  background: linear-gradient(145deg, #161b22 0%, #0d1117 100%);
+  border: 1px solid #30363d;
+  border-radius: 16px;
+  padding: 32px 36px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.request-card-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(88, 166, 255, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.request-card-header:hover {
+  border-color: #484f58;
+}
+
+/* ===== REQUEST AVATAR BADGE ===== */
+.request-avatar-badge {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1c2333 0%, #0d1117 100%);
+  border: 3px solid #30363d;
+  font-size: 40px;
+  color: #58a6ff;
+  transition: all 0.3s ease;
+}
+
+.request-card-header:hover .request-avatar-badge {
+  border-color: #58a6ff;
+  box-shadow: 0 0 40px rgba(88, 166, 255, 0.1);
+}
+
+.request-avatar-badge i {
+  font-size: 40px;
+}
+
+/* ===== PROFILE INFO STACK ===== */
+.profile-info-stack {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-info-stack h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f0f6fc;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.profile-handle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #58a6ff;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-handle i {
+  font-size: 14px;
+}
+
+.profile-email {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: #8b949e;
+  margin: 0;
+}
+
+.profile-email i {
+  font-size: 14px;
+  color: #484f58;
+}
+
+/* ===== REQUEST FORM SECTION ===== */
+.request-form-section {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 16px;
+  padding: 32px 36px;
+  transition: all 0.25s ease;
+}
+
+.request-form-section:hover {
+  border-color: #484f58;
+}
+
+/* ===== STYLED DJANGO FORM ===== */
+.styled-django-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ===== FORM FIELDS STACK ===== */
+.form-fields-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ===== FORM GROUP ===== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #c9d1d9;
+}
+
+.required-asterisk {
+  color: #f85149;
+  font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 11px 14px;
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 10px;
+  color: #f0f6fc;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  outline: none;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #484f58;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b949e' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.form-group select option {
+  background: #0d1117;
+  color: #f0f6fc;
+}
+
+/* ===== FIELD HELP ===== */
+.field-help {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #484f58;
+  margin-top: 2px;
+}
+
+.field-help i {
+  font-size: 13px;
+}
+
+/* ===== FIELD ERRORS ===== */
+.field-errors {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(248, 81, 73, 0.08);
+  border: 1px solid rgba(248, 81, 73, 0.2);
+  border-radius: 8px;
+  color: #f85149;
+  font-size: 13px;
+}
+
+.error-msg i {
+  font-size: 14px;
+}
+
+/* ===== FORM ACTION FOOTER ===== */
+.form-action-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #21262d;
+  margin-top: 4px;
+}
+
+/* ===== REQUEST SUBMIT BUTTON ===== */
+.request-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 28px;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.request-submit-btn .skill-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #f0f6fc;
+}
+
+.request-submit-btn .skill-name i {
+  font-size: 16px;
+  color: #58a6ff;
+}
+
+.request-submit-btn .skill-level-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px;
+  background: #238636;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.25s ease;
+}
+
+.request-submit-btn .skill-level-pill i {
+  font-size: 12px;
+}
+
+.request-submit-btn:hover {
+  border-color: #58a6ff;
+  background: #161b22;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.request-submit-btn:hover .skill-level-pill {
+  background: #2ea043;
+  box-shadow: 0 4px 16px rgba(35, 134, 54, 0.3);
+}
+
+.request-submit-btn:active {
+  transform: scale(0.97);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 820px) {
+  .request-wrapper {
+    max-width: 100%;
+  }
+
+  .request-card-header {
+    padding: 24px 24px;
+    gap: 20px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .request-avatar-badge {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+
+  .request-avatar-badge i {
+    font-size: 32px;
+  }
+
+  .profile-info-stack {
+    text-align: center;
+  }
+
+  .profile-handle {
+    justify-content: center;
+  }
+
+  .profile-email {
+    justify-content: center;
+  }
+
+  .profile-info-stack h1 {
+    font-size: 24px;
+  }
+
+  .request-form-section {
+    padding: 24px 20px;
+    border-radius: 14px;
+  }
+
+  .styled-django-form {
+    gap: 20px;
+  }
+
+  .form-fields-stack {
+    gap: 16px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .form-action-footer {
+    justify-content: center;
+  }
+
+  .request-submit-btn {
+    min-width: 160px;
+    padding: 12px 24px;
+  }
+
+  .request-submit-btn .skill-name {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .request-card-header {
+    padding: 20px 16px;
+    border-radius: 12px;
+    gap: 16px;
+  }
+
+  .request-avatar-badge {
+    width: 64px;
+    height: 64px;
+    font-size: 28px;
+    border-width: 2px;
+  }
+
+  .request-avatar-badge i {
+    font-size: 28px;
+  }
+
+  .profile-info-stack h1 {
+    font-size: 20px;
+  }
+
+  .profile-handle {
+    font-size: 12px;
+  }
+
+  .profile-email {
+    font-size: 14px;
+  }
+
+  .request-form-section {
+    padding: 18px 16px;
+    border-radius: 12px;
+  }
+
+  .styled-django-form {
+    gap: 16px;
+  }
+
+  .form-fields-stack {
+    gap: 14px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    font-size: 14px;
+    padding: 9px 12px;
+    border-radius: 8px;
+  }
+
+  .form-group textarea {
+    min-height: 80px;
+  }
+
+  .error-msg {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .field-help {
+    font-size: 12px;
+  }
+
+  .form-action-footer {
+    padding-top: 16px;
+  }
+
+  .request-submit-btn {
+    min-width: 100%;
+    padding: 10px 20px;
+    border-radius: 10px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .request-submit-btn .skill-name {
+    font-size: 14px;
+  }
+
+  .request-submit-btn .skill-level-pill {
+    font-size: 11px;
+    padding: 4px 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .request-card-header {
+    padding: 16px 12px;
+  }
+
+  .request-avatar-badge {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+
+  .request-avatar-badge i {
+    font-size: 24px;
+  }
+
+  .profile-info-stack h1 {
+    font-size: 18px;
+  }
+
+  .profile-email {
+    font-size: 13px;
+  }
+
+  .request-form-section {
+    padding: 14px 12px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .request-submit-btn .skill-name {
+    font-size: 13px;
+  }
+
+  .request-submit-btn .skill-level-pill {
+    font-size: 10px;
+    padding: 3px 12px;
+  }
+}
+
+/* ===== INPUT VALIDATION STATES ===== */
+.form-group input:invalid:not(:placeholder-shown),
+.form-group textarea:invalid:not(:placeholder-shown),
+.form-group select:invalid:not(:placeholder-shown) {
+  border-color: #f85149;
+}
+
+.form-group input:valid:not(:placeholder-shown),
+.form-group textarea:valid:not(:placeholder-shown),
+.form-group select:valid:not(:placeholder-shown) {
+  border-color: #3fb950;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.request-wrapper {
+  animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}

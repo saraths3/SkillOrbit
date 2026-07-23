@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile · SkillOrbit{% endblock %}
+
+{% block extrastyle %}
+  <link rel="stylesheet" href="{% static 'css/accounts/edit_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="edit-container">
+  <div class="edit-header">
+    <a href="{% url 'profile' %}" class="btn-back">
+      <i class="fas fa-arrow-left"></i> Back to Profile
+    </a>
+    <h1><i class="fas fa-user-edit"></i> Edit Profile</h1>
+    <p class="edit-subtitle">Update your personal information and public profile</p>
+  </div>
+  
+  <form method="post" enctype="multipart/form-data" class="edit-form">
+    {% csrf_token %}
+    
+    <!-- Avatar Edit Section -->
+    <div class="avatar-edit-section">
+      <div class="avatar-preview">
+        {% if profile.avatar %}
+          <img src="{{ request.user.userprofile.avatar.url }}" alt="Current Avatar" id="imgPreview" class="avatar-preview-image">
+        {% else %}
+          <div class="avatar-placeholder-circle">{{ user.username|slice:":1"|upper }}</div>
+        {% endif %}
+      </div>
+      
+      <div class="avatar-actions">
+        <label for="{{ form.avatar.id_for_label }}" class="btn-upload">
+          <i class="fas fa-cloud-upload-alt"></i> Upload New Image
+        </label>
+        <div style="display: none;">
+          {{ form.avatar }}
+        </div>
+
+        {% if profile.avatar %}
+          <label class="btn-remove">
+            <input type="checkbox" name="avatar-clear" id="avatar-clear_id">
+            <i class="fas fa-trash-alt"></i> Remove Image
+          </label>
+        {% endif %}
+        <p class="avatar-hint">Recommended: Square image, at least 200x200px</p>
+      </div>
+    </div>
+
+    <!-- Form Fields -->
+    <div class="form-fields-grid">
+      {% for field in form %}
+        {% if field.name != 'avatar' %}
+          <div class="form-group {% if field.field.required %}required{% endif %}">
+            <label for="{{ field.id_for_label }}">
+              {{ field.label }}
+              {% if field.field.required %}
+                <span class="required-asterisk">*</span>
+              {% endif %}
+            </label>
+            {{ field }}
+            {% if field.help_text %}
+              <span class="field-help">{{ field.help_text }}</span>
+            {% endif %}
+            {% if field.errors %}
+              <span class="field-error">
+                <i class="fas fa-exclamation-circle"></i> {{ field.errors.0 }}
+              </span>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">
+        <i class="fas fa-save"></i> Save Changes
+      </button>
+      <a href="{% url 'profile' %}" class="btn-cancel">
+        <i class="fas fa-times"></i> Cancel
+      </a>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Avatar preview functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const avatarInput = document.querySelector('input[type="file"][name="avatar"]');
+    const preview = document.getElementById('imgPreview');
+    const placeholder = document.querySelector('.avatar-placeholder-circle');
+    
+    if (avatarInput) {
+      avatarInput.addEventListener('change', function(e) {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            if (preview) {
+              preview.src = e.target.result;
+              preview.style.display = 'block';
+            } else if (placeholder) {
+              // Replace placeholder with image
+              const img = document.createElement('img');
+              img.src = e.target.result;
+              img.alt = 'Avatar Preview';
+              img.className = 'avatar-preview-image';
+              placeholder.parentNode.replaceChild(img, placeholder);
+            }
+          }
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

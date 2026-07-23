@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<link rel="stylesheet" href="{% static 'css/core/community.css' %}">
+
+<div class="room-container">
+    
+    <!-- Header Block & Return Navigation -->
+    <div class="room-header">
+        <a href="{% url 'community' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Discussions
+        </a>
+        <h1>{{ topic.title }}</h1>
+        <p class="room-meta">
+            <i class="fas fa-user"></i> Launched by @{{ topic.user.username }}
+        </p>
+    </div>
+
+    <!-- Topic Description Card Context -->
+    <div class="room-description-card">
+        <i class="fas fa-info-circle"></i>
+        <p>{{ topic.description }}</p>
+    </div>
+
+    <!-- Active Chat Interface Engine -->
+    <div class="chat-interface-box">
+        
+        <!-- Scroller Container hooked directly to HTMX Engine polling every 3s -->
+        <div id="chat-scroller" 
+             hx-get="{% url 'community_room' topic.id %}" 
+             hx-trigger="every 3s" 
+             hx-target="#chat-messages-container" 
+             hx-select="#chat-messages-container > *">
+            
+            <div id="chat-messages-container">
+                {% for comment in comments %}
+                    <!-- Message Bubble Structure switching dynamic modifiers for the auth user -->
+                    <div class="comment-bubble{% if comment.user == request.user %} current-user{% endif %}">
+                        
+                        <div class="comment-meta">
+                            <i class="fas fa-user-circle"></i>
+                            <strong>@{{ comment.user.username }}</strong>
+                            {% if comment.user == request.user %}
+                                <span class="user-self-tag">(You)</span>
+                            {% endif %}
+                            <span class="meta-dot">•</span>
+                            <i class="fas fa-clock"></i>
+                            <span>{{ comment.created_at|timesince }} ago</span>
+                        </div>
+                        
+                        <p class="comment-text">{{ comment.comment }}</p>
+                    </div>
+                {% empty %}
+                    <!-- Empty Chat Slate Anchor -->
+                    <div class="empty-chat-state">
+                        <i class="fas fa-comment-dots"></i>
+                        <p>No messages here yet. Break the ice!</p>
+                    </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+
+        <!-- Inline Form Toolbar & Action Input Area -->
+        <div class="chat-composer-bar">
+            <form method="POST" id="main-chat-form">
+                {% csrf_token %}
+                <div class="input-inline-row">
+                    <textarea name="message_body" 
+                              id="main-textarea" 
+                              placeholder="Type a message... (Press Enter to Send)" 
+                              required></textarea>
+                    
+                    <button type="submit" class="btn-send-icon" title="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const scroller = document.getElementById("chat-scroller");
+        let userIsScrolling = false;
+
+        function scrollToBottom() {
+            if (!userIsScrolling) {
+                scroller.scrollTop = scroller.scrollHeight;
+            }
+        }
+
+        // Initial alignment positioning
+        scrollToBottom();
+
+        // Track manual scroll tracking variables to protect historical window reads
+        scroller.addEventListener('scroll', function() {
+            const distance = scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop;
+            userIsScrolling = distance > 40; 
+        });
+
+        // Trigger adjustments immediately after structural HTMX injection swaps
+        document.body.addEventListener("htmx:afterLoad", function(evt) {
+            if (evt.detail.target.id === "chat-messages-container") {
+                scrollToBottom();
+            }
+        });
+
+        // Smart Submit trigger on raw keyboard action interceptor
+        const mainTextarea = document.getElementById("main-textarea");
+        mainTextarea.addEventListener("keydown", function(e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                if (this.value.trim() !== "") {
+                    document.getElementById("main-chat-form").submit();
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

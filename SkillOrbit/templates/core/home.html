@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home Dashboard{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/core/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+    <!-- Top Hero Banner: Welcome Area -->
+    <header class="dashboard-hero-card">
+        <div class="hero-text-content">
+            <h1>Welcome back, {{ request.user.username }}</h1>
+            <p>Welcome to SkillOrbit. Manage your profile, explore skilled people, and continue your learning journey from one unified interface.</p>
+        </div>
+    </header>
+
+    <!-- Main Content Workspace Layout Split -->
+    <div class="dashboard-grid-layout">
+        
+        <!-- Left Column: User Identity & Inventory -->
+        <div class="workspace-column">
+            
+            <!-- Profile Overview Widget -->
+            <section class="dashboard-card profile-widget">
+                <div class="profile-card-header">
+                    {% if request.user.userprofile.avatar  %}
+                        <img src="{{ request.user.userprofile.avatar.url }}" alt="Profile Picture" class="dashboard-avatar">
+                    {% else %}
+                        <div class="dashboard-avatar-fallback">{{ request.user.username|slice:":1"|upper }}</div>
+                    {% endif %}
+                    
+                    <div class="profile-identity">
+                        <h3>{{ profile.full_name|default:request.user.username }}</h3>
+                        {% if profile.headline %}
+                            <p class="profile-headline">{{ profile.headline }}</p>
+                        {% endif %}
+                        <p class="profile-email">{{ request.user.email }}</p>
+                    </div>
+                </div>
+                
+                <div class="profile-action-footer">
+                    <a href="{% url 'profile' %}" class="btn-primary">View Profile</a>
+                    <a href="{% url 'edit_profile' %}" class="btn-secondary">Edit Profile</a>
+                </div>
+            </section>
+
+            <!-- My Skills Management Inventory -->
+            <section class="dashboard-card">
+                <div class="card-title-row">
+                    <h2>My Skills</h2>
+                    <a href="{% url 'add_skills' %}" class="btn-inline-link"><i class="fas fa-plus-circle"></i> Add Skill</a>
+                </div>
+
+                <div class="skills-stack-list">
+                    {% for user_skill in user_skills %}
+                        <div class="skill-item-row">
+                            <div class="skill-info">
+                                <strong>{{ user_skill.skill.name }}</strong>
+                                <span class="skill-exp">
+                                    {% if user_skill.years_of_experience %}
+                                        <i class="fas fa-clock"></i> {{ user_skill.years_of_experience }} years exp
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <span class="proficiency-badge badge-{{ user_skill.get_proficiency_display|lower }}">
+                                {{ user_skill.get_proficiency_display }}
+                            </span>
+                        </div>
+                    {% empty %}
+                        <div class="empty-state-card">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>You haven't added any skills to your portfolio yet.</p>
+                            <a href="{% url 'add_skills' %}" class="btn-empty-action">Add Your First Skill</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+
+        <!-- Right Column: Operations & Roadmap -->
+        <div class="workspace-column">
+            
+            <!-- Quick Actions Router Dashboard Grid -->
+            <section class="dashboard-card">
+                <h2>Quick Actions</h2>
+                <div class="quick-actions-grid">
+                    <a href="{% url 'explore' %}" class="action-tile">
+                        <span class="tile-icon"><i class="fas fa-compass"></i></span>
+                        <span class="tile-label">Explore Users</span>
+                    </a>
+                    <a href="{% url 'my_connections' %}" class="action-tile">
+                        <span class="tile-icon"><i class="fas fa-user-friends"></i></span>
+                        <span class="tile-label">My Connections</span>
+                    </a>
+                    <a href="{% url 'profile' %}" class="action-tile">
+                        <span class="tile-icon"><i class="fas fa-user"></i></span>
+                        <span class="tile-label">View Profile</span>
+                    </a>
+                    <a href="{% url 'edit_profile' %}" class="action-tile">
+                        <span class="tile-icon"><i class="fas fa-sliders-h"></i></span>
+                        <span class="tile-label">Edit Profile</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Upcoming Features Roadmap Timeline -->
+            <section class="dashboard-card">
+                <h2>Platform Roadmap</h2>
+                <ul class="roadmap-feature-list">
+                    <li>
+                        <span class="roadmap-indicator ongoing"></span>
+                        <div class="roadmap-text">
+                            <strong>Skill Requests</strong>
+                            <p>Match request routing queues for custom trade demands.</p>
+                        </div>
+                        <span class="roadmap-tag">Coming Soon</span>
+                    </li>
+                    <li>
+                        <span class="roadmap-indicator ongoing"></span>
+                        <div class="roadmap-text">
+                            <strong>Private Chat</strong>
+                            <p>Direct messaging pipeline with active connections.</p>
+                        </div>
+                        <span class="roadmap-tag">Coming Soon</span>
+                    </li>
+                    <li>
+                        <span class="roadmap-indicator planned"></span>
+                        <div class="roadmap-text">
+                            <strong>Learning Sessions</strong>
+                            <p>Interactive workspaces and joint digital whiteboards.</p>
+                        </div>
+                        <span class="roadmap-tag">Planned</span>
+                    </li>
+                    <li>
+                        <span class="roadmap-indicator planned"></span>
+                        <div class="roadmap-text">
+                            <strong>Real-Time Video Calls</strong>
+                            <p>WebRTC high-fidelity peer-to-peer visual rooms.</p>
+                        </div>
+                        <span class="roadmap-tag">Planned</span>
+                    </li>
+                </ul>
+            </section>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

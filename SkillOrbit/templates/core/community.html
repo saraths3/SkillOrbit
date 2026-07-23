@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/core/community.css' %}">
+
+<!-- Swapped .auth-container with a dedicated dashboard wrapper for screen optimization -->
+<div class="community-container">
+    
+    <div class="community-header">
+        <h1>Discussions</h1>
+        <p class="community-subtitle">Select a topic panel space below to jump inside its live chat environment.</p>
+    </div>
+
+    <!-- Timeline Wrapper Context for Fixed Button Boundaries -->
+    <div class="timeline-relative-anchor">
+        <div class="topics-timeline-list">
+            {% for topic in topics %}
+                <div class="topic-card-item">
+                    <div class="topic-card-body">
+                        <h3 class="topic-item-title">
+                            <a href="{% url 'community_room' topic.id %}">{{ topic.title }}</a>
+                        </h3>
+                        <p class="topic-item-description">{{ topic.description }}</p>
+                    </div>
+                    
+                    <div class="topic-item-footer">
+                        <span class="topic-meta">
+                            <i class="fas fa-user"></i> @{{ topic.user.username }} 
+                            <i class="fas fa-clock"></i> {{ topic.created_at|timesince }} ago
+                        </span>
+                        
+                        {% if topic.user == request.user %}
+                            <a href="{% url 'topic_delete' topic.id %}" class="topic-delete-link" onclick="return confirm('Wipe this discussion room out completely?');">
+                                <i class="fas fa-trash-alt"></i> Delete Topic
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-timeline-state">
+                    <i class="fas fa-comments"></i>
+                    <p>No discussion rooms match your active view criteria.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Float/Absolute Action Control -->
+        <button id="smart-action-btn" class="bottom-center-action-btn" onclick="document.getElementById('new-topic-modal-drawer').style.display='flex'">
+            <i class="fas fa-plus-circle"></i> Add New Topic
+        </button>
+    </div>
+
+    <!-- Pop-up Dynamic Overlay Backing -->
+    <div id="new-topic-modal-drawer" class="modal-form-overlay-backdrop" style="display: none;">
+        <!-- Retained .auth-container here as it matches the 400px card rule perfectly -->
+        <div class="auth-container modal-content-card">
+            
+            <div class="modal-header">
+                <h2>Launch a Topic</h2>
+                <span onclick="document.getElementById('new-topic-modal-drawer').style.display='none'" class="modal-close-x">
+                    <i class="fas fa-times"></i>
+                </span>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="modal-form-body">
+                    {% for field in form %}
+                        <div class="input-group">
+                            <label class="input-field-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="error-banner field-error">
+                                    <i class="fas fa-exclamation-circle"></i> {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="submit" class="modal-submit-btn">
+                        <i class="fas fa-rocket"></i> Create Topic
+                    </button>
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('new-topic-modal-drawer').style.display='none'" class="modal-cancel-link">Cancel</a>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("smart-action-btn");
+        const footer = document.querySelector("footer");
+
+        if (footer && btn) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        btn.classList.add("absolute-position");
+                    } else {
+                        btn.classList.remove("absolute-position");
+                    }
+                });
+            }, { rootMargin: "0px 0px 20px 0px" });
+
+            observer.observe(footer);
+        }
+    });
+</script>
+{% endblock %}

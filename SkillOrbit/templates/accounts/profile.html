@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile · {{ profile.full_name|default:user.username }}{% endblock %}
+
+{% block extrastyle %}
+  <link rel="stylesheet" href="{% static 'css/accounts/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Wrap everything in the container expected by File #2's layout system -->
+<div class="profile-container">
+  
+  <!-- Header / Identity -->
+  <div class="profile-header">
+    {% if profile.avatar %}
+      <img src="{{ profile.avatar.url }}" alt="Avatar" class="avatar-image">
+    {% else %}
+      <div class="avatar-fallback">{{ user.username|slice:":1"|upper }}</div>
+    {% endif %}
+    <h1>{{ profile.full_name|default:user.username }}</h1>
+    <p class="profile-meta"><i class="fas fa-at"></i> {{ user.username }} <span class="meta-separator">·</span> <i class="fas fa-envelope"></i> {{ user.email }}</p>
+    {% if profile.headline %}<p class="profile-headline"><i class="fas fa-quote-left"></i> {{ profile.headline }}</p>{% endif %}
+    
+    <!-- Edit Button (Only visible to profile owner) -->
+    {% if request.user == profile.user %}
+      <div class="profile-actions">
+        <a href="{% url 'edit_profile' %}" class="btn-edit"><i class="fas fa-pen"></i> Edit Profile</a> 
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Content Body -->
+  <div class="profile-body">
+    {% if profile.bio %}
+      <div class="bio-section">
+        <h3><i class="fas fa-user-circle"></i> About</h3>
+        <p>{{ profile.bio }}</p>
+      </div>
+    {% endif %}
+
+    {% if profile.career_level %}
+      <div class="career-section">
+        <h3><i class="fas fa-briefcase"></i> Career Level</h3>
+        <p><span class="career-badge">{{ profile.get_career_level_display }}</span></p>
+      </div>
+    {% endif %}
+
+    <!-- Social Links -->
+    {% if profile.github_url or profile.linkedin_url %}
+      <div class="profile-links">
+        <h3><i class="fas fa-link"></i> Connect</h3>
+        <div class="social-links-group">
+          {% if profile.github_url %}
+            <a href="{{ profile.github_url }}" target="_blank" class="social-link github-link">
+              <i class="fab fa-github"></i> GitHub
+            </a>
+          {% endif %}
+          {% if profile.linkedin_url %}
+            <a href="{{ profile.linkedin_url }}" target="_blank" class="social-link linkedin-link">
+              <i class="fab fa-linkedin-in"></i> LinkedIn
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Unified Skills Section Container -->
+  <div class="skills-section">
+    <div class="skills-header">
+      <h2><i class="fas fa-code"></i> Skills</h2>
+      <a href="{% url 'add_skills' %}" class="btn-action"><i class="fas fa-plus-circle"></i> Add Skill</a>
+    </div>
+
+    <div class="skills-grid">
+      {% for user_skill in user_skills %}
+        <div class="skill-card">
+          <div class="skill-info">
+            <h4>{{ user_skill.skill.name }}</h4>
+            <span class="skill-badge level-{{ user_skill.proficiency|lower }}">{{ user_skill.get_proficiency_display }}</span>
+            {% if user_skill.years_of_experience %}
+              <p class="skill-experience"><i class="fas fa-clock"></i> {{ user_skill.years_of_experience }} years exp.</p>
+            {% endif %}
+          </div>
+          <div class="skill-card-actions">
+            <a href="{% url 'edit_skills' user_skill.id %}" class="skill-link-edit"><i class="fas fa-pen"></i> Edit</a>
+            <a href="{% url 'delete_skill' user_skill.id %}" class="skill-link-delete"><i class="fas fa-trash-alt"></i> Delete</a>
+          </div>
+        </div>
+      {% empty %}
+        <div class="empty-state">
+          <i class="fas fa-lightbulb"></i>
+          <p>You haven't added any skills yet.</p>
+          <a href="{% url 'add_skills' %}" class="btn-empty-add">Add Your First Skill</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

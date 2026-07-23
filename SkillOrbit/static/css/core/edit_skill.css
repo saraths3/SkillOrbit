@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Global Window Setup (From File #1 Canvas Layout)
+   ========================================================================== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: #fafafa;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Form Panel Container (From File #3 Form Specs)
+   ========================================================================== */
+.edit-container {
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 6px;
+}
+
+.edit-container h2 {
+    margin: 0 0 24px 0;
+    font-size: 1.75rem;
+    color: #000;
+    text-align: left;
+}
+
+/* ==========================================================================
+   Dynamic Django Form Field Bindings (Targets {{ form }} Output)
+   ========================================================================== */
+.form-content-layout p,
+.form-content-layout ul {
+    margin: 0 0 20px 0;
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+}
+
+.form-content-layout label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+    color: #000;
+    text-align: left;
+}
+
+.form-content-layout input[type="text"],
+.form-content-layout input[type="number"],
+.form-content-layout select,
+.form-content-layout textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #333;
+    background-color: #fff;
+}
+
+.form-content-layout input:focus,
+.form-content-layout select:focus {
+    border-color: #000;
+    outline: none;
+}
+
+/* Error Element Configuration from File #3 */
+.form-content-layout .errorlist {
+    margin: 0 0 8px 0;
+    padding: 0;
+    color: #cf1322;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+/* ==========================================================================
+   Form Trigger Actions (From File #1 & File #3 Patterns)
+   ========================================================================== */
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+button[type="submit"]:hover {
+    background-color: #222;
+}
+
+.btn-cancel {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.btn-cancel:hover {
+    color: #000;
+    text-decoration: underline;
+}

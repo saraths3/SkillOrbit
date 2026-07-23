@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/skill/requests.css' %}">
+
+<div class="requests-wrapper">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-inbox"></i> Requests</h1>
+        <p class="page-subtitle">Manage skill requests you've received from other members</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="requests-nav">
+        <a href="{% url 'my_requests' %}" class="nav-tab">
+            <i class="fas fa-paper-plane"></i> My Requests
+        </a>
+        <a href="{% url 'all_skill_requests' %}" class="nav-tab active">
+            <i class="fas fa-inbox"></i> Requests Received
+        </a>
+    </div>
+
+    <!-- Requests List -->
+    <div class="requests-list">
+        {% for r in requests %}
+            <div class="request-card">
+                <div class="request-header">
+                    <div class="request-sender">
+                        <div class="sender-avatar">
+                            {% if r.from_user.userprofile.avatar %}
+                                <img src="{{ r.from_user.userprofile.avatar.url }}" alt="{{ r.from_user.username }}" class="sender-avatar-img">
+                            {% else %}
+                                <div class="sender-avatar-fallback">{{ r.from_user.username|slice:":1"|upper }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="sender-info">
+                            <span class="sender-name">{{ r.from_user.get_full_name|default:r.from_user.username }}</span>
+                            <span class="sender-username">@{{ r.from_user.username }}</span>
+                        </div>
+                    </div>
+                    <span class="status-badge status-{{ r.status|lower }}">
+                        {{ r.get_status_display }}
+                    </span>
+                </div>
+
+                <div class="request-skill">
+                    <i class="fas fa-tag"></i>
+                    <span class="skill-name">{{ r.skill }}</span>
+                </div>
+                
+                {% if r.message %}
+                    <div class="request-message">
+                        <i class="fas fa-comment"></i>
+                        <p>{{ r.message }}</p>
+                    </div>
+                {% endif %}
+
+                <div class="request-footer">
+                    <span class="request-meta">
+                        <i class="fas fa-clock"></i>
+                        {{ r.created_at|timesince }} ago
+                    </span>
+                    
+                    {% if r.status == "pending" %}
+                        <form method="post" class="request-actions-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="request_id" value="{{ r.id }}">
+                            <button type="submit" name="action" value="accept" class="btn-action btn-accept">
+                                <i class="fas fa-check"></i> Accept
+                            </button>
+                            <button type="submit" name="action" value="reject" class="btn-action btn-reject">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>You haven't received any skill requests yet.</p>
+                <p class="empty-subtitle">When members request your skills, they'll appear here.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock content %}

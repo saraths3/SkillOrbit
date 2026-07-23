@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Explore Members{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/core/explore.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="explore-wrapper">
+    
+    <!-- Section Title Area -->
+    <div class="page-header">
+        <a href="{% url 'home' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h1>Explore Members</h1>
+        <p>Discover skilled individuals across the SkillOrbit network and explore their profiles.</p>
+    </div>
+
+    <!-- Live Member Search Interface Component -->
+    <div class="search-container">
+        <form method="GET" action="{% url 'explore' %}" class="search-form">
+            <div class="search-input-wrapper">
+                <span class="search-icon">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" 
+                       name="q" 
+                       value="{{ request.GET.q|default:'' }}" 
+                       placeholder="Search members by name or username..." 
+                       aria-label="Search members">
+                {% if request.GET.q %}
+                    <a href="{% url 'explore' %}" class="clear-search" title="Clear search">
+                        <i class="fas fa-times"></i>
+                    </a>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn-search">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
+    </div>
+
+    <!-- Responsive Grid Array of User Profiles -->
+    <div class="explore-grid">
+        {% for user in all_users %}
+            <article class="user-profile-card">
+                
+                <!-- Avatar Visual Handler Zone -->
+                <div class="card-avatar-area">
+                    {% if user.userprofile.avatar %}
+                        <img src="{{ user.userprofile.avatar.url }}" alt="{{ user.username }}'s Avatar" class="profile-avatar">
+                    {% else %}
+                        <!-- Visual fallback utilizing the first letter of their username -->
+                        <div class="profile-avatar-fallback">{{ user.username|slice:":1"|upper }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Profile Identity Info -->
+                <div class="card-identity-area">
+                    <h3>
+                        {% if user.full_name %}
+                            {{ user.full_name }}
+                        {% else %}
+                            {{ user.username }}
+                        {% endif %}
+                    </h3>
+                    
+                    {% if user.full_name %}
+                        <span class="user-handle">@{{ user.username }}</span>
+                    {% endif %}
+
+                    <!-- Injected Skills Badge Container -->
+                    <div class="user-skills-badges">
+                        {% for user_skill in user.userskill_set.all %}
+                            <span class="skill-badge">{{ user_skill.skill.name }}</span>
+                        {% empty %}
+                            <span class="no-skills">No skills listed</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Action Footer Routing to Public Profile -->
+                <div class="card-action-footer">
+                    <a href="{% url 'public_profile' pp_id=user.id %}" class="btn-view-profile">
+                        <i class="fas fa-user"></i> View Full Profile
+                    </a>
+                </div>
+
+            </article>
+        {% empty %}
+            <div class="empty-explore-state">
+                <i class="fas fa-users-slash"></i>
+                <p>No other community members found on the platform yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

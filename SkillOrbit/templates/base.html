@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillOrbit · {% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  {% block extrastyle %}{% endblock %}
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav-container">
+    <div class="nav-inner">
+      <a href="{% url 'home' %}" class="nav-logo">
+        <i class="fas fa-rocket"></i>
+        <span>SkillOrbit</span>
+      </a>
+      
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="{% url 'explore' %}"><i class="fas fa-compass"></i> Explore</a></li>
+        <li><a href="{% url 'sessions' %}"><i class="fas fa-video"></i> Sessions</a></li>
+        <li><a href="{% url 'community' %}"><i class="fas fa-users"></i> Community</a></li>
+        <li><a href="{% url 'all_skill_requests' %}"><i class="fas fa-handshake"></i> Requests</a></li>
+        
+        {% if request.user.is_authenticated %}
+          <li class="nav-profile">
+            <a href="{% url 'profile' %}" class="nav-profile-link">
+              {% if request.user.userprofile.avatar %}
+                <img src="{{ request.user.userprofile.avatar.url }}" alt="Profile" class="nav-avatar">
+              {% else %}
+                <span class="nav-avatar-fallback">{{ request.user.username|slice:":1"|upper }}</span>
+              {% endif %}
+            </a>
+          </li>
+          <li><a href="{% url 'signout' %}"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+        {% else %}
+          <li><a href="{% url 'signin' %}" class="nav-cta"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-container">
+    <div class="footer-inner">
+      <p class="footer-copyright">
+        <i class="far fa-copyright"></i> 2026 SkillOrbit. Built with Django &amp; PostgreSQL.
+      </p>
+      <div class="footer-links">
+        <a href="#"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile navigation toggle
+    const toggle = document.getElementById('navToggle');
+    const links = document.getElementById('navLinks');
+    
+    if (toggle && links) {
+      toggle.addEventListener('click', function() {
+        links.classList.toggle('active');
+        const icon = this.querySelector('i');
+        if (icon) {
+          icon.classList.toggle('fa-bars');
+          icon.classList.toggle('fa-times');
+        }
+      });
+    }
+  </script>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
