@@ -1,42 +1,90 @@
 {% extends 'base.html' %}
-{% load static %}
-
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'css/skill/connections.css' %}">
 
-    <h2 class="page-title">My Connections</h2>
+<div class="connections-wrapper">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-user-friends"></i> My Connections</h1>
+        <p class="page-subtitle">Connect with skilled professionals and expand your network</p>
+    </div>
 
-    {% for connection in connections %}
-      {% if connection.user_one == request.user %}
-            {% if connection.user_two.userprofile.avatar %}
-              <img src="{{ connection.user_two.userprofile.avatar.url }}" alt="{{ connection.user_two.username }}" class="avatar-img">
-            {% else %}
-              <span class="avatar-fallback">{{ connection.user_two.username|slice:":1"|upper }}</span>
-            {% endif %}
-            {% if connection.user_two.full_name %}
-              <strong class="full-name">{{ connection.user_two.full_name }}</strong>
-            {% endif %}
-            <span class="username">@{{ connection.user_two.username }}</span>
-            <span class="email">{{ connection.user_two.email }}</span>
-            <a href="{% url 'public_profile' connection.user_two.id %}" class="btn btn-outline">View Profile</a>
-            <button class="btn btn-secondary" >Chat (Coming Soon)</button>
-            <button class="btn btn-secondary" >Schedule Session (Coming Soon)</button>
+    <!-- Connections Grid -->
+    <div class="connections-grid">
+        {% for connection in connections %}
+            <div class="connection-card">
+                
+                <!-- Avatar Section -->
+                <div class="connection-avatar">
+                    {% if connection.user_one == request.user %}
+                        {% if connection.user_two.userprofile.avatar %}
+                            <img src="{{ connection.user_two.userprofile.avatar.url }}" alt="{{ connection.user_two.username }}" class="avatar-img">
+                        {% else %}
+                            <span class="avatar-fallback">{{ connection.user_two.username|slice:":1"|upper }}</span>
+                        {% endif %}
+                    {% elif connection.user_two == request.user %}
+                        {% if connection.user_one.userprofile.avatar %}
+                            <img src="{{ connection.user_one.userprofile.avatar.url }}" alt="{{ connection.user_one.username }}" class="avatar-img">
+                        {% else %}
+                            <span class="avatar-fallback">{{ connection.user_one.username|slice:":1"|upper }}</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
 
-      {% elif connection.user_two == request.user %}
-            {% if connection.user_one.userprofile.avatar %}
-              <img src="{{ connection.user_one.userprofile.avatar.url }}" alt="{{ connection.user_one.username }}" class="avatar-img">
-            {% else %}
-              <span class="avatar-fallback">{{ connection.user_one.username|slice:":1"|upper }}</span>
-            {% endif %}
-            {% if connection.user_one.full_name %}
-              <strong class="full-name">{{ connection.user_one.full_name }}</strong>
-            {% endif %}
-            <span class="username">@{{ connection.user_one.username }}</span>
-            <span class="email">{{ connection.user_one.email }}</span>
-            <a href="{% url 'public_profile' connection.user_one.id %}" class="btn btn-outline">View Profile</a>
-            <button class="btn btn-secondary" >Chat (Coming Soon)</button>
-            <button class="btn btn-secondary" >Schedule Session (Coming Soon)</button>
-      {% endif %}
-    {% endfor %}
+                <!-- User Info -->
+                <div class="connection-info">
+                    {% if connection.user_one == request.user %}
+                        {% if connection.user_two.full_name %}
+                            <strong class="full-name">{{ connection.user_two.full_name }}</strong>
+                        {% endif %}
+                        <span class="username"><i class="fas fa-at"></i> {{ connection.user_two.username }}</span>
+                        <span class="email"><i class="fas fa-envelope"></i> {{ connection.user_two.email }}</span>
+                    {% elif connection.user_two == request.user %}
+                        {% if connection.user_one.full_name %}
+                            <strong class="full-name">{{ connection.user_one.full_name }}</strong>
+                        {% endif %}
+                        <span class="username"><i class="fas fa-at"></i> {{ connection.user_one.username }}</span>
+                        <span class="email"><i class="fas fa-envelope"></i> {{ connection.user_one.email }}</span>
+                    {% endif %}
+                </div>
 
+                <!-- Action Buttons -->
+                <div class="connection-actions">
+                    {% if connection.user_one == request.user %}
+                        <a href="{% url 'public_profile' connection.user_two.id %}" class="btn btn-outline">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    {% elif connection.user_two == request.user %}
+                        <a href="{% url 'public_profile' connection.user_one.id %}" class="btn btn-outline">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'chat' connection.user_two.id %}"><button class="btn btn-outline">
+                        <i class="fas fa-comment"></i> Chat
+                    </button></a>
+                    
+                    <a href=""><button class="btn btn-outline">
+                        <i class="fas fa-calendar-plus"></i> Schedule Session
+                    </button></a>
+                    
+                </div>
+
+            </div>
+        {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-user-friends"></i>
+                <p>You don't have any connections yet.</p>
+                <p class="empty-subtitle">Start connecting with skilled professionals on SkillOrbit.</p>
+                <a href="{% url 'explore' %}" class="btn-empty-action">
+                    <i class="fas fa-compass"></i> Explore Members
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
 {% endblock %}

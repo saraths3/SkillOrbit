@@ -20,24 +20,15 @@ def home_view(request):
 
 def explore_view(request):
     User = get_user_model()
-    all_users = User.objects.select_related('userprofile').prefetch_related('userskill_set__skill').exclude(id=request.user.id)
+    all_users = User.objects.exclude(id=request.user.id)
     query = request.GET.get('q')
     if query:
         query = query.strip()
-        if query[0] == '@':
-            query = query[1:]
-            print(query)
-            matching_skill_user_ids = UserSkill.objects.filter(skill__name__icontains=query).values_list('user_id', flat = True)
-            all_users = all_users.filter(Q(username__icontains=query)).distinct()
-            context = {
-                'all_users': all_users
-            }
-            return render(request, 'core/explore.html', context)
-        matching_skill_user_ids = UserSkill.objects.filter(skill__name__icontains=query).values_list('user_id', flat=True)
-        all_users = all_users.filter(
-            Q(full_name__icontains=query) |
-            Q(id__in=matching_skill_user_ids)
-        ).distinct()
+        if query.startswith('@'):
+            all_users = all_users.filter(username__icontains=query[1:])
+        else:
+            skill_users = UserSkill.objects.filter(skill__name__icontains=query).values_list('user_id', flat=True)
+            all_users = all_users.filter(Q(full_name__icontains=query) | Q(id__in=skill_users))
     context = {
         'all_users': all_users
     }

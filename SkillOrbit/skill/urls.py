@@ -8,5 +8,5 @@ urlpatterns = [
     path('profile/request/', skill_request, name='skill_request'),
     path('requests/', All_Skill_Requests, name='all_skill_requests'),
     path('myrequests/' , My_Skill_Requests, name='my_requests'),
-    path('connetions/', My_Connection, name='my_connections')
+    path('connections/', My_Connection, name='my_connections')
 ]
