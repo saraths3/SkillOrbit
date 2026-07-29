@@ -1,5 +1,30 @@
 {% extends 'base.html' %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    const conversationId = "{{ conversation.id }}";
+
+    const chatSocket = new WebSocket(
+        "ws://" + window.location.host + "/ws/chat/" + conversationId + "/"
+    );
+
+    chatSocket.onopen = function () {
+        console.log("Connected!");
+    };
+
+    chatSocket.onclose = function () {
+        console.log("Disconnected!");
+    };
+</script>
+<body>
+    {% block content %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/chat/chat.css' %}">
 {% endblock content %}
+</body>
+</html>

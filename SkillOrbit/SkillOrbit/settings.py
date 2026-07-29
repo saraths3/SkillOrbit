@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'chat',
     'skill',
     'core',
+    'channels',
     'jazzmin',
     'accounts',
     'django.contrib.admin',
@@ -104,6 +105,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'SkillOrbit.wsgi.application'
+ASGI_APPLICATION = 'SkillOrbit.asgi.application'
 
 
 # Database
