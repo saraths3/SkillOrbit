@@ -79,8 +79,9 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backend.AuthenticationBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
+
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
