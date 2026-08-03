@@ -124,6 +124,71 @@
   color: #ffffff;
 }
 
+/* ===== MATERIAL DESIGN 3 SKILL AUTOCOMPLETE SUGGESTIONS ===== */
+.skill-autocomplete-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.skill-suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  background-color: var(--md-sys-color-surface-container-high, #2b2930);
+  border: 1px solid var(--md-sys-color-outline-variant, #49454f);
+  border-radius: var(--md-shape-corner-medium, 12px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  display: none;
+  padding: 6px;
+  backdrop-filter: blur(10px);
+}
+
+.skill-suggestions-dropdown.show {
+  display: block;
+  animation: m3FadeIn 0.15s ease-out;
+}
+
+@keyframes m3FadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.skill-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  color: var(--md-sys-color-on-surface, #e6e1e5);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--md-shape-corner-small, 8px);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.skill-suggestion-item i {
+  color: var(--md-sys-color-primary, #d0bcff);
+  font-size: 13px;
+}
+
+.skill-suggestion-item:hover,
+.skill-suggestion-item.active {
+  background-color: var(--md-sys-color-secondary-container, #4a4458);
+  color: var(--md-sys-color-on-secondary-container, #e8def8);
+}
+
+.skill-suggestion-item mark {
+  background: transparent;
+  color: var(--md-sys-color-primary, #d0bcff);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+
 /* ===== RESPONSIVE BREAKPOINTS ===== */
 @media (max-width: 600px) {
   .skill-form-wrapper {

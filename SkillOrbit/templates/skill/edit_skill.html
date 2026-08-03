@@ -13,34 +13,39 @@
     <div class="skill-form-card">
         <div class="skill-form-header">
             <h1><i class="fas fa-pen-to-square"></i> Edit Skill</h1>
-            <p>Update your proficiency and experience</p>
+            <p>Update your skill name, proficiency, and experience</p>
         </div>
 
         <form method="POST" class="skill-form">
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="{{ form.skill.id_for_label }}">Select Skill <span style="color: var(--accent-rose);">*</span></label>
-                {{ form.skill }}
-                {% if form.skill.errors %}
-                    <span style="color: var(--accent-rose); font-size: 12px;"><i class="fas fa-circle-exclamation"></i> {{ form.skill.errors|striptags }}</span>
-                {% endif %}
+                <label for="skill_name_input">Skill Name <span style="color: var(--accent-rose, #ffb4ab);">*</span></label>
+                <div class="skill-autocomplete-wrapper">
+                    <input type="text" 
+                           id="skill_name_input" 
+                           name="skill_name" 
+                           value="{{ userskill.skill.name }}" 
+                           placeholder="Type or select a skill (e.g. Python, React, Figma)..." 
+                           autocomplete="off" 
+                           required 
+                           autofocus>
+                    <div class="skill-suggestions-dropdown" id="suggestionsDropdown"></div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="{{ form.proficiency.id_for_label }}">Proficiency Level <span style="color: var(--accent-rose);">*</span></label>
-                {{ form.proficiency }}
-                {% if form.proficiency.errors %}
-                    <span style="color: var(--accent-rose); font-size: 12px;"><i class="fas fa-circle-exclamation"></i> {{ form.proficiency.errors|striptags }}</span>
-                {% endif %}
+                <label for="proficiency">Proficiency Level <span style="color: var(--accent-rose, #ffb4ab);">*</span></label>
+                <select name="proficiency" id="proficiency" required>
+                    <option value="beginner" {% if userskill.proficiency == 'beginner' %}selected{% endif %}>Beginner</option>
+                    <option value="intermediate" {% if userskill.proficiency == 'intermediate' %}selected{% endif %}>Intermediate</option>
+                    <option value="expert" {% if userskill.proficiency == 'expert' %}selected{% endif %}>Expert</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label for="{{ form.years_of_experience.id_for_label }}">Years of Experience</label>
-                {{ form.years_of_experience }}
-                {% if form.years_of_experience.errors %}
-                    <span style="color: var(--accent-rose); font-size: 12px;"><i class="fas fa-circle-exclamation"></i> {{ form.years_of_experience.errors|striptags }}</span>
-                {% endif %}
+                <label for="years_of_experience">Years of Experience</label>
+                <input type="number" name="years_of_experience" id="years_of_experience" value="{{ userskill.years_of_experience|default:'' }}" min="0" max="50" placeholder="e.g. 2">
             </div>
 
             <div class="form-actions">
@@ -56,4 +61,108 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const popularSkills = [
+        "Python", "JavaScript", "React", "Node.js", "Django", 
+        "HTML5 & CSS3", "TypeScript", "Java", "C++", "C# / .NET", 
+        "Go (Golang)", "Rust", "PHP", "Ruby on Rails", "SQL & PostgreSQL", 
+        "MongoDB", "Redis", "GraphQL", "REST API Design", "Docker", 
+        "Kubernetes", "AWS (Amazon Web Services)", "Google Cloud Platform (GCP)", "Microsoft Azure", "Git & GitHub", 
+        "CI/CD Pipelines", "Linux System Administration", "Cybersecurity", "Machine Learning", "Deep Learning / PyTorch", 
+        "Data Science & Pandas", "Artificial Intelligence / LLMs", "UI/UX Design", "Figma", "Graphic Design", 
+        "Web Design", "Flutter App Development", "React Native", "iOS Development (Swift)", "Android Development (Kotlin)", 
+        "Product Management", "Project Management (Agile/Scrum)", "Technical Writing", "Digital Marketing", "SEO (Search Engine Optimization)", 
+        "Content Writing", "Video Editing / Premiere Pro", "Public Speaking & Communication", "Financial Analysis", "Leadership & Mentorship"
+    ];
+
+    const input = document.getElementById('skill_name_input');
+    const dropdown = document.getElementById('suggestionsDropdown');
+    let activeIndex = -1;
+
+    function renderSuggestions(query) {
+        const val = (query || '').trim().toLowerCase();
+        dropdown.innerHTML = '';
+        activeIndex = -1;
+
+        const matches = popularSkills.filter(skill => skill.toLowerCase().includes(val));
+
+        if (matches.length === 0 || val === '') {
+            dropdown.classList.remove('show');
+            return;
+        }
+
+        matches.forEach((skill, idx) => {
+            const item = document.createElement('div');
+            item.className = 'skill-suggestion-item';
+
+            const matchIndex = skill.toLowerCase().indexOf(val);
+            if (matchIndex >= 0) {
+                const before = skill.substring(0, matchIndex);
+                const match = skill.substring(matchIndex, matchIndex + val.length);
+                const after = skill.substring(matchIndex + val.length);
+                item.innerHTML = `<i class="fas fa-wand-magic-sparkles"></i> <span>${before}<mark>${match}</mark>${after}</span>`;
+            } else {
+                item.innerHTML = `<i class="fas fa-wand-magic-sparkles"></i> <span>${skill}</span>`;
+            }
+
+            item.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                input.value = skill;
+                dropdown.classList.remove('show');
+            });
+
+            dropdown.appendChild(item);
+        });
+
+        dropdown.classList.add('show');
+    }
+
+    input.addEventListener('input', function() {
+        renderSuggestions(this.value);
+    });
+
+    input.addEventListener('focus', function() {
+        renderSuggestions(this.value);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+
+    input.addEventListener('keydown', function(e) {
+        const items = dropdown.querySelectorAll('.skill-suggestion-item');
+        if (!dropdown.classList.contains('show') || items.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeIndex = (activeIndex + 1) % items.length;
+            updateActive(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeIndex = (activeIndex - 1 + items.length) % items.length;
+            updateActive(items);
+        } else if (e.key === 'Enter' && activeIndex >= 0) {
+            e.preventDefault();
+            items[activeIndex].click();
+        }
+    });
+
+    function updateActive(items) {
+        items.forEach((item, index) => {
+            if (index === activeIndex) {
+                item.classList.add('active');
+                item.scrollIntoView({ block: 'nearest' });
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

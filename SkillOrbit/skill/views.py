@@ -12,23 +12,45 @@ from django.db.models import Q
 @login_required(login_url='signin')
 def add_skills(request):
     if request.method == 'POST':
-        form = UserSkillForm(request.POST)
-        if form.is_valid():
-            selected_skill = form.cleaned_data.get('skill')
-            if UserSkill.objects.filter(user=request.user, skill=selected_skill).exists():
-                messages.error(request, 'This skill is already in your portfolio.')
-                return render(request, 'skill/add_skill.html', {'form': form})
-            new_skill = form.save(commit=False)
-            new_skill.user = request.user
-            new_skill.save()
-            messages.success(request, 'Skill added to your portfolio successfully!')
-            return redirect('profile')
-        else:
-            messages.error(request, 'Failed to add skill. Please check your form.')
-    else:
-        form = UserSkillForm()
+        skill_name = request.POST.get('skill_name', '').strip()
+        proficiency = request.POST.get('proficiency', 'beginner')
+        years = request.POST.get('years_of_experience')
 
-    return render(request, 'skill/add_skill.html', {'form': form})
+        if not skill_name:
+            messages.error(request, 'Please enter or select a skill name.')
+            return render(request, 'skill/add_skill.html', {
+                'skill_name': skill_name,
+                'proficiency': proficiency,
+                'years_of_experience': years,
+            })
+
+        from .models import Skill
+        skill_obj = Skill.objects.filter(name__iexact=skill_name).first()
+        if not skill_obj:
+            skill_obj = Skill.objects.create(name=skill_name)
+
+        if UserSkill.objects.filter(user=request.user, skill=skill_obj).exists():
+            messages.error(request, f'"{skill_obj.name}" is already in your portfolio.')
+            return render(request, 'skill/add_skill.html', {
+                'skill_name': skill_name,
+                'proficiency': proficiency,
+                'years_of_experience': years,
+            })
+
+        years_val = None
+        if years and str(years).isdigit():
+            years_val = int(years)
+
+        UserSkill.objects.create(
+            user=request.user,
+            skill=skill_obj,
+            proficiency=proficiency,
+            years_of_experience=years_val
+        )
+        messages.success(request, f'Added "{skill_obj.name}" to your portfolio!')
+        return redirect('profile')
+
+    return render(request, 'skill/add_skill.html')
 
 @login_required(login_url="signin")
 def delete_skills(request, sid):
@@ -41,20 +63,37 @@ def delete_skills(request, sid):
 def edit_skills(request, sid):
     userskill = get_object_or_404(UserSkill, id=sid, user=request.user)
     if request.method == 'POST':
-        form = UserSkillForm(request.POST, instance=userskill)
-        if form.is_valid():
-            selected_skill = form.cleaned_data.get('skill')
-            if UserSkill.objects.filter(user=request.user, skill=selected_skill).exclude(id=userskill.id).exists():
-                messages.error(request, 'This skill is already in your portfolio.')
-                return render(request, 'skill/edit_skill.html', {'form': form})
-            form.save()
-            messages.success(request, 'Skill updated successfully!')
-            return redirect('profile')
-        else:
-            messages.error(request, 'Failed to update skill. Please check your form.')
-    else:
-        form = UserSkillForm(instance=userskill)
-    return render(request, 'skill/edit_skill.html', {'form': form})
+        skill_name = request.POST.get('skill_name', '').strip()
+        proficiency = request.POST.get('proficiency', 'beginner')
+        years = request.POST.get('years_of_experience')
+
+        if not skill_name:
+            messages.error(request, 'Please enter or select a skill name.')
+            return render(request, 'skill/edit_skill.html', {'userskill': userskill})
+
+        from .models import Skill
+        skill_obj = Skill.objects.filter(name__iexact=skill_name).first()
+        if not skill_obj:
+            skill_obj = Skill.objects.create(name=skill_name)
+
+        if UserSkill.objects.filter(user=request.user, skill=skill_obj).exclude(id=userskill.id).exists():
+            messages.error(request, f'"{skill_obj.name}" is already in your portfolio.')
+            return render(request, 'skill/edit_skill.html', {'userskill': userskill})
+
+        years_val = None
+        if years and str(years).isdigit():
+            years_val = int(years)
+
+        userskill.skill = skill_obj
+        userskill.proficiency = proficiency
+        userskill.years_of_experience = years_val
+        userskill.save()
+
+        messages.success(request, f'Updated "{skill_obj.name}" successfully!')
+        return redirect('profile')
+
+    return render(request, 'skill/edit_skill.html', {'userskill': userskill})
+
     
 @login_required(login_url='signin')
 def skill_request(request):
