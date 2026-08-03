@@ -1,0 +1,422 @@
+/* ===== SKILLORBIT ADMIN - ANDROID MATERIAL DESIGN 3 DARK THEME ===== */
+
+:root {
+  /* M3 System Color Tokens */
+  --md-sys-color-background: #141218;
+  --md-sys-color-surface-container-lowest: #0f0d13;
+  --md-sys-color-surface-container-low: #1d1b20;
+  --md-sys-color-surface-container: #211f26;
+  --md-sys-color-surface-container-high: #2b2930;
+  --md-sys-color-surface-container-highest: #36343b;
+
+  --md-sys-color-primary: #d0bcff;
+  --md-sys-color-on-primary: #381e72;
+  --md-sys-color-primary-container: #4f378b;
+  --md-sys-color-on-primary-container: #eaddff;
+
+  --md-sys-color-secondary: #ccc2dc;
+  --md-sys-color-on-secondary: #332d41;
+  --md-sys-color-secondary-container: #4a4458;
+  --md-sys-color-on-secondary-container: #e8def8;
+
+  --md-sys-color-tertiary: #efb8c8;
+  --md-sys-color-on-tertiary: #492532;
+  --md-sys-color-tertiary-container: #633b48;
+  --md-sys-color-on-tertiary-container: #ffd8e4;
+
+  --md-sys-color-error: #f2b8b5;
+  --md-sys-color-on-error: #601410;
+  --md-sys-color-error-container: #8c1d18;
+  --md-sys-color-on-error-container: #f9dedc;
+
+  --md-sys-color-on-surface: #e6e0e9;
+  --md-sys-color-on-surface-variant: #cac4d0;
+  --md-sys-color-outline: #938f99;
+  --md-sys-color-outline-variant: #49454f;
+
+  /* M3 Shape Tokens */
+  --md-shape-corner-extra-large: 28px;
+  --md-shape-corner-large: 16px;
+  --md-shape-corner-medium: 12px;
+  --md-shape-corner-small: 8px;
+  --md-shape-corner-full: 9999px;
+  
+  --md-font-family: 'Roboto', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Base Body Overrides ---------- */
+body,
+#container,
+.content-wrapper,
+.main-footer {
+  background-color: var(--md-sys-color-background) !important;
+  color: var(--md-sys-color-on-surface) !important;
+  font-family: var(--md-font-family) !important;
+}
+
+/* ---------- Top Navbar ---------- */
+.navbar-dark,
+.navbar.bg-dark,
+.main-header .navbar {
+  background-color: var(--md-sys-color-surface-container) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-nav .nav-link {
+  color: var(--md-sys-color-on-surface) !important;
+  font-weight: 500;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+  color: var(--md-sys-color-primary) !important;
+}
+
+.navbar-dark .navbar-brand .brand-text {
+  color: var(--md-sys-color-on-surface) !important;
+  font-weight: 700;
+}
+
+/* ---------- Sidebar (Material 3 Navigation Drawer) ---------- */
+.main-sidebar,
+.sidebar,
+.brand-link,
+.brand-text {
+  background-color: var(--md-sys-color-surface-container-low) !important;
+  border-right: 1px solid var(--md-sys-color-outline-variant) !important;
+  color: var(--md-sys-color-on-surface) !important;
+}
+
+.brand-link {
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+.brand-link .brand-text {
+  color: var(--md-sys-color-on-surface) !important;
+  font-weight: 700;
+}
+
+/* Sidebar Navigation Links */
+.nav-sidebar .nav-item .nav-link {
+  color: var(--md-sys-color-on-surface-variant) !important;
+  border-radius: var(--md-shape-corner-full) !important;
+  margin: 4px 12px !important;
+  transition: all 0.2s ease;
+  padding: 10px 18px;
+  font-weight: 500;
+}
+
+.nav-sidebar .nav-item .nav-link i,
+.nav-sidebar .nav-item .nav-link .nav-icon {
+  color: var(--md-sys-color-on-surface-variant) !important;
+  transition: color 0.2s;
+}
+
+.nav-sidebar .nav-item .nav-link.active,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+  background-color: var(--md-sys-color-secondary-container) !important;
+  color: var(--md-sys-color-on-secondary-container) !important;
+  font-weight: 700 !important;
+  border-left: none !important;
+  border-radius: var(--md-shape-corner-full) !important;
+}
+
+.nav-sidebar .nav-item .nav-link.active i,
+.nav-sidebar .nav-item .nav-link.active .nav-icon {
+  color: var(--md-sys-color-on-secondary-container) !important;
+}
+
+.nav-sidebar .nav-item .nav-link:hover {
+  background-color: var(--md-sys-color-surface-container-highest) !important;
+  color: var(--md-sys-color-on-surface) !important;
+}
+
+.nav-sidebar .nav-item .nav-link:hover i,
+.nav-sidebar .nav-item .nav-link:hover .nav-icon {
+  color: var(--md-sys-color-primary) !important;
+}
+
+/* Submenu / Treeview */
+.nav-sidebar .nav-treeview {
+  background: transparent !important;
+}
+
+.nav-sidebar .nav-treeview .nav-link {
+  padding-left: 2.5rem !important;
+  color: var(--md-sys-color-on-surface-variant) !important;
+}
+
+.nav-sidebar .nav-treeview .nav-link.active {
+  color: var(--md-sys-color-primary) !important;
+  background: var(--md-sys-color-primary-container) !important;
+  border-radius: var(--md-shape-corner-full) !important;
+}
+
+/* ---------- Cards & Panels (M3 Extra-Large Containers) ---------- */
+.card,
+.info-box,
+.modal-content,
+.box {
+  background-color: var(--md-sys-color-surface-container) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: var(--md-shape-corner-extra-large) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: var(--md-sys-color-surface-container-high) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
+  color: var(--md-sys-color-on-surface) !important;
+  padding: 1.2rem 1.5rem;
+  font-weight: 700;
+}
+
+.card-header .card-title {
+  color: var(--md-sys-color-on-surface) !important;
+  font-weight: 700;
+}
+
+.card-body {
+  color: var(--md-sys-color-on-surface) !important;
+}
+
+.card-footer {
+  background-color: var(--md-sys-color-surface-container-low) !important;
+  border-top: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+/* ---------- Tables ---------- */
+.table,
+.table-responsive {
+  background-color: var(--md-sys-color-surface-container) !important;
+  color: var(--md-sys-color-on-surface) !important;
+}
+
+.table thead th {
+  background-color: var(--md-sys-color-surface-container-low) !important;
+  color: var(--md-sys-color-on-surface-variant) !important;
+  border-bottom: 2px solid var(--md-sys-color-outline-variant) !important;
+  border-top: none !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.table td,
+.table th {
+  border-top: 1px solid var(--md-sys-color-outline-variant) !important;
+  padding: 0.85rem 1.2rem;
+}
+
+.table tbody tr:hover {
+  background-color: var(--md-sys-color-surface-container-high) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--md-sys-color-surface-container-lowest) !important;
+}
+
+/* ---------- Form Controls ---------- */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+textarea,
+select,
+.form-control {
+  background-color: var(--md-sys-color-surface-container-highest) !important;
+  color: var(--md-sys-color-on-surface) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: var(--md-shape-corner-medium) !important;
+  padding: 0.7rem 1rem;
+  transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+textarea:focus,
+select:focus,
+.form-control:focus {
+  border-color: var(--md-sys-color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(208, 188, 255, 0.15) !important;
+  background-color: var(--md-sys-color-surface-container-high) !important;
+}
+
+/* Select Dropdown Arrow Fix */
+select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23cac4d0' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 12px !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+/* ---------- Buttons (M3 Tonal & Primary Pills) ---------- */
+.btn-primary,
+.btn-warning,
+input[type="submit"],
+.btn-info {
+  background: var(--md-sys-color-primary) !important;
+  border: none !important;
+  color: var(--md-sys-color-on-primary) !important;
+  font-weight: 700 !important;
+  border-radius: var(--md-shape-corner-full) !important;
+  padding: 0.65rem 1.8rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:hover,
+.btn-warning:hover,
+input[type="submit"]:hover,
+.btn-info:hover {
+  background: #eaddff !important;
+  color: var(--md-sys-color-on-primary) !important;
+  box-shadow: 0 4px 14px rgba(208, 188, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Secondary Buttons */
+.btn-secondary {
+  background-color: var(--md-sys-color-secondary-container) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  color: var(--md-sys-color-on-secondary-container) !important;
+  border-radius: var(--md-shape-corner-full) !important;
+  font-weight: 600 !important;
+}
+
+.btn-secondary:hover {
+  background-color: #5c556e !important;
+  color: #ffffff !important;
+}
+
+.btn-success {
+  background-color: var(--md-sys-color-tertiary-container) !important;
+  color: var(--md-sys-color-on-tertiary-container) !important;
+  border: none !important;
+  border-radius: var(--md-shape-corner-full) !important;
+}
+
+.btn-danger {
+  background-color: var(--md-sys-color-error-container) !important;
+  color: var(--md-sys-color-on-error-container) !important;
+  border: none !important;
+  border-radius: var(--md-shape-corner-full) !important;
+}
+
+/* ---------- Links ---------- */
+a,
+a:visited {
+  color: var(--md-sys-color-primary) !important;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #eaddff !important;
+}
+
+/* ---------- Badges & Chips ---------- */
+.badge-warning,
+.badge-primary {
+  background-color: var(--md-sys-color-primary-container) !important;
+  color: var(--md-sys-color-primary) !important;
+  border-radius: var(--md-shape-corner-full) !important;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+}
+
+.badge-secondary {
+  background-color: var(--md-sys-color-secondary-container) !important;
+  color: var(--md-sys-color-on-secondary-container) !important;
+  border-radius: var(--md-shape-corner-full) !important;
+}
+
+/* ---------- Jazzmin Login / Auth Box ---------- */
+.login-box,
+.register-box {
+  background-color: var(--md-sys-color-surface-container) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: var(--md-shape-corner-extra-large) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5) !important;
+}
+
+.login-box-body,
+.register-box-body {
+  background: transparent !important;
+}
+
+/* ---------- Changelist Filter Sidebar ---------- */
+#changelist-filter {
+  background-color: var(--md-sys-color-surface-container-low) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: var(--md-shape-corner-large) !important;
+  padding: 1.2rem;
+}
+
+#changelist-filter h3 {
+  color: var(--md-sys-color-on-surface) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
+  padding-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+#changelist-filter a {
+  color: var(--md-sys-color-on-surface-variant) !important;
+  border-radius: var(--md-shape-corner-full) !important;
+  padding: 0.3rem 0.8rem;
+  transition: all 0.2s;
+}
+
+#changelist-filter a:hover {
+  color: var(--md-sys-color-primary) !important;
+  background: rgba(208, 188, 255, 0.1);
+}
+
+#changelist-filter .selected a {
+  color: var(--md-sys-color-on-primary-container) !important;
+  background: var(--md-sys-color-primary-container) !important;
+  font-weight: 700;
+}
+
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--md-sys-color-background) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--md-sys-color-surface-container-highest) !important;
+  border-radius: var(--md-shape-corner-full) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--md-sys-color-primary) !important;
+}

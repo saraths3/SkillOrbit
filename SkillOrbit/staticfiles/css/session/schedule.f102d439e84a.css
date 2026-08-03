@@ -1,0 +1,394 @@
+/* ===== SCHEDULE SESSION MATERIAL DESIGN 3 STYLES ===== */
+.schedule-form-wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+.schedule-form-card {
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-extra-large);
+  padding: 36px 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.schedule-form-header {
+  margin-bottom: 24px;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+  color: var(--md-sys-color-primary);
+}
+
+.schedule-form-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.schedule-form-header h1 i {
+  color: var(--md-sys-color-primary);
+}
+
+.schedule-form-header p {
+  font-size: 13.5px;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 4px;
+}
+
+.schedule-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.required-star {
+  color: var(--md-sys-color-error);
+}
+
+.custom-input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.custom-input-with-icon input {
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.input-calendar-icon {
+  position: absolute;
+  right: 14px;
+  color: var(--md-sys-color-primary);
+  font-size: 16px;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.form-control,
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-medium);
+  color: var(--md-sys-color-on-surface);
+  font-size: 13.5px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px rgba(208, 188, 255, 0.15);
+}
+
+.field-error-msg {
+  color: var(--md-sys-color-error);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-submit-session {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  padding: 12px 24px;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border: none;
+  border-radius: var(--md-shape-corner-full);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-submit-session:hover {
+  background-color: #eaddff;
+}
+
+.btn-cancel-session {
+  padding: 12px 22px;
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-full);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel-session:hover {
+  background-color: #5c556e;
+  color: #ffffff;
+}
+
+/* ===== CUSTOM MATERIAL 3 DATE & TIME PICKER MODAL ===== */
+.custom-picker-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.custom-picker-modal {
+  background-color: #211f26;
+  border: 1px solid #36343b;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 360px;
+  padding: 24px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.picker-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.picker-month-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #d0bcff;
+}
+
+.btn-picker-nav {
+  background: #2b2930;
+  border: 1px solid #36343b;
+  color: #d0bcff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-picker-nav:hover {
+  background-color: #4f378b;
+  color: #ffffff;
+}
+
+.picker-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #938f99;
+}
+
+.picker-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.picker-day-cell {
+  background: transparent;
+  border: none;
+  color: #e6e1e5;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.picker-day-cell:hover:not(.disabled) {
+  background-color: #2b2930;
+  color: #d0bcff;
+}
+
+.picker-day-cell.selected {
+  background-color: #d0bcff !important;
+  color: #381e72 !important;
+  font-weight: 800 !important;
+}
+
+.picker-day-cell.disabled {
+  color: #49454f;
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.picker-time-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #36343b;
+}
+
+.time-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #938f99;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.time-controls-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.picker-time-select {
+  background-color: #2b2930 !important;
+  border: 1px solid #36343b !important;
+  color: #d0bcff !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+}
+
+.time-colon {
+  font-size: 18px;
+  font-weight: 800;
+  color: #d0bcff;
+}
+
+.picker-error-notice {
+  background-color: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  color: #f87171;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.picker-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-picker-cancel {
+  flex: 1;
+  padding: 10px;
+  background-color: #2b2930;
+  border: 1px solid #36343b;
+  color: #c9c5d0;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-picker-confirm {
+  flex: 2;
+  padding: 10px;
+  background-color: #d0bcff;
+  border: none;
+  color: #381e72;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+@media (max-width: 600px) {
+  .schedule-form-wrapper {
+    padding: 6px 0;
+  }
+
+  .schedule-form-card {
+    padding: 18px 14px;
+    border-radius: var(--md-shape-corner-large);
+  }
+
+  .schedule-form-header h1 {
+    font-size: 18px;
+  }
+
+  .form-control,
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .btn-submit-session,
+  .btn-cancel-session {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 12.5px;
+  }
+}
