@@ -27,12 +27,13 @@
     <!-- Active Chat Interface Engine -->
     <div class="chat-interface-box">
         
-        <!-- Scroller Container hooked directly to HTMX Engine polling every 3s -->
+        <!-- Scroller Container hooked directly to HTMX Engine polling every 5s smoothly -->
         <div id="chat-scroller" 
              hx-get="{% url 'community_room' topic.id %}" 
-             hx-trigger="every 3s" 
+             hx-trigger="every 5s" 
              hx-target="#chat-messages-container" 
-             hx-select="#chat-messages-container > *">
+             hx-select="#chat-messages-container > *"
+             hx-swap="innerHTML">
             
             <div id="chat-messages-container">
                 {% for comment in comments %}

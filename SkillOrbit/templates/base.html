@@ -1,89 +1,371 @@
 {% load static %}
+{% load cache %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#141218">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>SkillOrbit · {% block title %}{% endblock %}</title>
+  
+  <!-- Material 3 Fonts: Roboto & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  
+  <!-- Base Stylesheet with Cache-Busting Version Query -->
+  <link rel="stylesheet" href="{% static 'css/base.css' %}?v=2.0">
   {% block extrastyle %}{% endblock %}
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav class="nav-container">
-    <div class="nav-inner">
-      <a href="{% url 'home' %}" class="nav-logo">
-        <i class="fas fa-rocket"></i>
+  <!-- ===== MATERIAL 3 TOP APP BAR ===== -->
+  <header class="md-top-app-bar" role="banner">
+    <div class="md-app-bar-inner">
+      
+      <!-- Brand Logo -->
+      <a href="{% url 'home' %}" class="md-brand-logo" aria-label="SkillOrbit Home">
+        <div class="md-brand-icon">
+          <i class="fas fa-circle-nodes"></i>
+        </div>
         <span>SkillOrbit</span>
       </a>
       
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <!-- Mobile Actions: Compact Profile Avatar + Icon-only Sign Out -->
+      <div class="md-mobile-actions">
+        {% if request.user.is_authenticated %}
+          <!-- Compact User Avatar Pill -->
+          <a href="{% url 'profile' %}" class="md-mobile-user-pill-compact" title="Profile">
+            {% if request.user.userprofile.avatar %}
+              <img src="{{ request.user.userprofile.avatar.url }}" alt="{{ request.user.username }}" class="md-avatar-img-small" loading="lazy">
+            {% else %}
+              <div class="md-avatar-fallback-small">{{ request.user.username|slice:":1"|upper }}</div>
+            {% endif %}
+            <span class="md-mobile-user-name">{{ request.user.username }}</span>
+          </a>
+          
+          <!-- Compact Sign Out Icon Button -->
+          <a href="{% url 'signout' %}" class="md-mobile-signout-btn-compact" title="Sign Out" aria-label="Sign out">
+            <i class="fas fa-arrow-right-from-bracket"></i>
+          </a>
+        {% else %}
+          <!-- Sign In Button for non-authenticated users -->
+          <a href="{% url 'signin' %}" class="md-mobile-signin-btn-top">
+            <i class="fas fa-arrow-right-to-bracket"></i>
+            <span>Sign In</span>
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile Menu Toggle (Hidden when mobile actions are shown) -->
+      <button class="md-nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
         <i class="fas fa-bars"></i>
       </button>
 
-      <ul class="nav-links" id="navLinks">
-        <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="{% url 'explore' %}"><i class="fas fa-compass"></i> Explore</a></li>
-        <li><a href="{% url 'sessions' %}"><i class="fas fa-video"></i> Sessions</a></li>
-        <li><a href="{% url 'community' %}"><i class="fas fa-users"></i> Community</a></li>
-        <li><a href="{% url 'all_skill_requests' %}"><i class="fas fa-handshake"></i> Requests</a></li>
+      <!-- Desktop Navigation Menu -->
+      <nav class="md-nav-menu" id="navLinks" role="navigation" aria-label="Main Navigation">
         
-        {% if request.user.is_authenticated %}
-          <li class="nav-profile">
-            <a href="{% url 'profile' %}" class="nav-profile-link">
+        <!-- Mobile Profile Section (Visible only in dropdown on mobile) -->
+        <div class="md-mobile-profile-section">
+          {% if request.user.is_authenticated %}
+            <div class="md-mobile-user-info">
               {% if request.user.userprofile.avatar %}
-                <img src="{{ request.user.userprofile.avatar.url }}" alt="Profile" class="nav-avatar">
+                <img src="{{ request.user.userprofile.avatar.url }}" alt="{{ request.user.username }}" class="md-mobile-avatar" loading="lazy">
               {% else %}
-                <span class="nav-avatar-fallback">{{ request.user.username|slice:":1"|upper }}</span>
+                <div class="md-mobile-avatar-fallback">{{ request.user.username|slice:":1"|upper }}</div>
               {% endif %}
+              <div class="md-mobile-user-details">
+                <span class="md-mobile-username">{{ request.user.get_full_name|default:request.user.username }}</span>
+                <span class="md-mobile-user-email">@{{ request.user.username }}</span>
+              </div>
+            </div>
+            <a href="{% url 'signout' %}" class="md-mobile-signout-btn">
+              <i class="fas fa-arrow-right-from-bracket"></i>
+              <span>Sign Out</span>
+            </a>
+          {% else %}
+            <a href="{% url 'signin' %}" class="md-mobile-signin-btn">
+              <i class="fas fa-arrow-right-to-bracket"></i>
+              <span>Sign In</span>
+            </a>
+          {% endif %}
+        </div>
+
+        <!-- Navigation Links -->
+        <ul class="md-nav-list">
+          <li>
+            <a href="{% url 'home' %}" class="md-nav-item" data-nav="home">
+              <div class="md-nav-indicator"><i class="fas fa-house"></i></div>
+              <span class="md-nav-label">Home</span>
             </a>
           </li>
-          <li><a href="{% url 'signout' %}"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
-        {% else %}
-          <li><a href="{% url 'signin' %}" class="nav-cta"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
-        {% endif %}
-      </ul>
-    </div>
-  </nav>
+          <li>
+            <a href="{% url 'explore' %}" class="md-nav-item" data-nav="explore">
+              <div class="md-nav-indicator"><i class="fas fa-compass"></i></div>
+              <span class="md-nav-label">Explore</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'sessions' %}" class="md-nav-item" data-nav="sessions">
+              <div class="md-nav-indicator"><i class="fas fa-video"></i></div>
+              <span class="md-nav-label">Sessions</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'community' %}" class="md-nav-item" data-nav="community">
+              <div class="md-nav-indicator"><i class="fas fa-users"></i></div>
+              <span class="md-nav-label">Community</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'all_skill_requests' %}" class="md-nav-item" data-nav="requests">
+              <div class="md-nav-indicator"><i class="fas fa-handshake"></i></div>
+              <span class="md-nav-label">
+                Requests
+                {% if pending_requests_count > 0 %}
+                  <span class="badge">{{ pending_requests_count }}</span>
+                {% endif %}
+              </span>
+            </a>
+          </li>
+        </ul>
 
-  <!-- Main Content -->
-  <main class="main-content">
+        <!-- Desktop User Actions -->
+        <div class="md-nav-actions">
+          {% if request.user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="md-profile-pill" title="Profile">
+              {% if request.user.userprofile.avatar %}
+                <img src="{{ request.user.userprofile.avatar.url }}" alt="{{ request.user.username }}'s profile" class="md-avatar-img" loading="lazy">
+              {% else %}
+                <div class="md-avatar-fallback" aria-hidden="true">{{ request.user.username|slice:":1"|upper }}</div>
+              {% endif %}
+              <span class="md-username">{{ request.user.username }}</span>
+            </a>
+            <a href="{% url 'signout' %}" class="md-icon-button" title="Sign Out" aria-label="Sign out">
+              <i class="fas fa-arrow-right-from-bracket"></i>
+            </a>
+          {% else %}
+            <a href="{% url 'signin' %}" class="md-btn-filled">
+              <i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i> 
+              <span>Sign In</span>
+            </a>
+          {% endif %}
+        </div>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT AREA ===== -->
+  <main class="md-main-content" role="main">
+    <!-- Messages / Snackbars -->
+    {% if messages %}
+      <div class="md-messages-container" id="messagesContainer" role="alert" aria-live="polite">
+        {% for message in messages %}
+          <div class="md-snackbar md-snackbar-{{ message.tags|default:'info' }}" role="alert">
+            <div class="md-snackbar-content">
+              {% if message.tags == 'error' %}
+                <i class="fas fa-circle-exclamation" aria-hidden="true"></i>
+              {% elif message.tags == 'success' %}
+                <i class="fas fa-circle-check" aria-hidden="true"></i>
+              {% elif message.tags == 'warning' %}
+                <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+              {% else %}
+                <i class="fas fa-circle-info" aria-hidden="true"></i>
+              {% endif %}
+              <span>{{ message }}</span>
+            </div>
+            <button type="button" class="md-snackbar-action" onclick="this.closest('.md-snackbar').remove()" aria-label="Close notification">
+              <i class="fas fa-xmark" aria-hidden="true"></i>
+            </button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Page Content Block -->
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Footer -->
-  <footer class="footer-container">
-    <div class="footer-inner">
-      <p class="footer-copyright">
-        <i class="far fa-copyright"></i> 2026 SkillOrbit. Built with Django &amp; PostgreSQL.
+  <!-- ===== BOTTOM NAVIGATION BAR (Mobile Only - Material 3 Style) ===== -->
+  <nav class="md-bottom-nav" role="navigation" aria-label="Bottom Navigation">
+    <div class="md-bottom-nav-inner">
+      
+      <a href="{% url 'home' %}" class="md-bottom-nav-item" data-nav="home" aria-label="Home">
+        <div class="md-bottom-nav-icon-wrapper">
+          <i class="fas fa-house" aria-hidden="true"></i>
+        </div>
+        <span>Home</span>
+      </a>
+      
+      <a href="{% url 'explore' %}" class="md-bottom-nav-item" data-nav="explore" aria-label="Explore">
+        <div class="md-bottom-nav-icon-wrapper">
+          <i class="fas fa-compass" aria-hidden="true"></i>
+        </div>
+        <span>Explore</span>
+      </a>
+      
+      <a href="{% url 'sessions' %}" class="md-bottom-nav-item" data-nav="sessions" aria-label="Sessions">
+        <div class="md-bottom-nav-icon-wrapper">
+          <i class="fas fa-video" aria-hidden="true"></i>
+        </div>
+        <span>Sessions</span>
+      </a>
+      
+      <a href="{% url 'community' %}" class="md-bottom-nav-item" data-nav="community" aria-label="Community">
+        <div class="md-bottom-nav-icon-wrapper">
+          <i class="fas fa-users" aria-hidden="true"></i>
+        </div>
+        <span>Community</span>
+      </a>
+      
+      <a href="{% url 'all_skill_requests' %}" class="md-bottom-nav-item" data-nav="requests" aria-label="Skill Requests">
+        <div class="md-bottom-nav-icon-wrapper">
+          <i class="fas fa-handshake" aria-hidden="true"></i>
+          {% if pending_requests_count > 0 %}
+            <span class="badge">{{ pending_requests_count }}</span>
+          {% endif %}
+        </div>
+        <span>Requests</span>
+      </a>
+      
+    </div>
+  </nav>
+
+  <!-- ===== FOOTER (Desktop Only) ===== -->
+  <footer class="md-footer" role="contentinfo">
+    <div class="md-footer-inner">
+      <p>
+        <i class="far fa-copyright" aria-hidden="true"></i> 
+        2026 SkillOrbit. Material Design 3 Edition.
       </p>
-      <div class="footer-links">
-        <a href="#"><i class="fab fa-github"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      <div class="md-footer-icons">
+        <a href="#" aria-label="GitHub" rel="noopener noreferrer">
+          <i class="fab fa-github" aria-hidden="true"></i>
+        </a>
+        <a href="#" aria-label="Twitter" rel="noopener noreferrer">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+        <a href="#" aria-label="LinkedIn" rel="noopener noreferrer">
+          <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+        </a>
       </div>
     </div>
   </footer>
 
+  <!-- ===== JAVASCRIPT ===== -->
   <script>
-    // Mobile navigation toggle
-    const toggle = document.getElementById('navToggle');
-    const links = document.getElementById('navLinks');
-    
-    if (toggle && links) {
-      toggle.addEventListener('click', function() {
-        links.classList.toggle('active');
-        const icon = this.querySelector('i');
-        if (icon) {
-          icon.classList.toggle('fa-bars');
-          icon.classList.toggle('fa-times');
+    document.addEventListener('DOMContentLoaded', function() {
+      // ---- Navigation Toggle ----
+      const toggle = document.getElementById('navToggle');
+      const navMenu = document.getElementById('navLinks');
+      
+      if (toggle && navMenu) {
+        toggle.addEventListener('click', function() {
+          const isOpen = navMenu.classList.toggle('mobile-open');
+          toggle.classList.toggle('active');
+          toggle.setAttribute('aria-expanded', isOpen);
+        });
+      }
+
+      // ---- Close menu on outside click ----
+      document.addEventListener('click', function(event) {
+        if (navMenu && navMenu.classList.contains('mobile-open')) {
+          const isClickInside = navMenu.contains(event.target);
+          const isClickOnToggle = toggle && toggle.contains(event.target);
+          
+          if (!isClickInside && !isClickOnToggle) {
+            navMenu.classList.remove('mobile-open');
+            if (toggle) {
+              toggle.classList.remove('active');
+              toggle.setAttribute('aria-expanded', 'false');
+            }
+          }
         }
       });
-    }
+
+      // ---- Close menu on Escape key ----
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && navMenu && navMenu.classList.contains('mobile-open')) {
+          navMenu.classList.remove('mobile-open');
+          if (toggle) {
+            toggle.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+
+      // ---- Highlight Active Navigation Links ----
+      const currentPath = window.location.pathname;
+      
+      // Desktop nav items
+      document.querySelectorAll('.md-nav-item').forEach(item => {
+        const href = item.getAttribute('href');
+        if (href && currentPath === href) {
+          item.classList.add('active');
+        }
+      });
+      
+      // Bottom nav items
+      document.querySelectorAll('.md-bottom-nav-item').forEach(item => {
+        const href = item.getAttribute('href');
+        if (href && currentPath === href) {
+          item.classList.add('active');
+        }
+      });
+
+      // ---- Scroll Effect on Top Bar ----
+      const topBar = document.querySelector('.md-top-app-bar');
+      if (topBar) {
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+          if (!ticking) {
+            window.requestAnimationFrame(function() {
+              if (window.scrollY > 10) {
+                topBar.classList.add('scrolled');
+              } else {
+                topBar.classList.remove('scrolled');
+              }
+              ticking = false;
+            });
+            ticking = true;
+          }
+        });
+      }
+
+      // ---- Auto-close Snackbars after 5 seconds ----
+      document.querySelectorAll('.md-snackbar').forEach(snackbar => {
+        setTimeout(() => {
+          snackbar.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+          snackbar.style.opacity = '0';
+          snackbar.style.transform = 'translateY(-20px) scale(0.95)';
+          setTimeout(() => {
+            if (snackbar.parentElement) {
+              snackbar.remove();
+            }
+          }, 300);
+        }, 5000);
+      });
+
+      // ---- Handle Bottom Nav Clicks (Active State) ----
+      document.querySelectorAll('.md-bottom-nav-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          document.querySelectorAll('.md-bottom-nav-item').forEach(nav => {
+            nav.classList.remove('active');
+          });
+          this.classList.add('active');
+        });
+      });
+    });
   </script>
 
+  <!-- Block for page-specific JavaScript -->
   {% block extra_js %}{% endblock %}
+  
 </body>
 </html>

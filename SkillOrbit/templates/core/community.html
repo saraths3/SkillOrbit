@@ -8,11 +8,16 @@
 <div class="community-container">
     
     <div class="community-header">
-        <h1>Discussions</h1>
-        <p class="community-subtitle">Select a topic panel space below to jump inside its live chat environment.</p>
+        <div class="header-text-group">
+            <h1>Discussions</h1>
+            <p class="community-subtitle">Select a topic panel space below to jump inside its live chat environment.</p>
+        </div>
+        <button id="smart-action-btn" class="top-action-btn" onclick="document.getElementById('new-topic-modal-drawer').style.display='flex'">
+            <i class="fas fa-plus-circle"></i> Add New Topic
+        </button>
     </div>
 
-    <!-- Timeline Wrapper Context for Fixed Button Boundaries -->
+    <!-- Timeline Wrapper Context -->
     <div class="timeline-relative-anchor">
         <div class="topics-timeline-list">
             {% for topic in topics %}
@@ -21,7 +26,7 @@
                         <h3 class="topic-item-title">
                             <a href="{% url 'community_room' topic.id %}">{{ topic.title }}</a>
                         </h3>
-                        <p class="topic-item-description">{{ topic.description }}</p>
+                        <p class="topic-item-description">{{ topic.description|truncatewords:30 }}</p>
                     </div>
                     
                     <div class="topic-item-footer">
@@ -44,17 +49,11 @@
                 </div>
             {% endfor %}
         </div>
-
-        <!-- Float/Absolute Action Control -->
-        <button id="smart-action-btn" class="bottom-center-action-btn" onclick="document.getElementById('new-topic-modal-drawer').style.display='flex'">
-            <i class="fas fa-plus-circle"></i> Add New Topic
-        </button>
     </div>
 
     <!-- Pop-up Dynamic Overlay Backing -->
     <div id="new-topic-modal-drawer" class="modal-form-overlay-backdrop" style="display: none;">
-        <!-- Retained .auth-container here as it matches the 400px card rule perfectly -->
-        <div class="auth-container modal-content-card">
+        <div class="modal-content-card">
             
             <div class="modal-header">
                 <h2>Launch a Topic</h2>
@@ -93,24 +92,4 @@
 
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const btn = document.getElementById("smart-action-btn");
-        const footer = document.querySelector("footer");
-
-        if (footer && btn) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        btn.classList.add("absolute-position");
-                    } else {
-                        btn.classList.remove("absolute-position");
-                    }
-                });
-            }, { rootMargin: "0px 0px 20px 0px" });
-
-            observer.observe(footer);
-        }
-    });
-</script>
 {% endblock %}

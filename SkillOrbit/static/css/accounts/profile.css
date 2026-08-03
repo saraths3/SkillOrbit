@@ -1,117 +1,70 @@
-/* ===== PROFILE CONTAINER ===== */
+/* ===== PROFILE MATERIAL DESIGN 3 STYLES ===== */
 .profile-container {
+  max-width: 1000px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  padding: 4px 0 8px;
-  max-width: 100%;
+  gap: 28px;
 }
 
-/* ===== PROFILE HEADER ===== */
 .profile-header {
-  background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 16px;
-  padding: 36px 40px;
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-extra-large);
+  padding: 36px 32px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: 12px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.25s ease;
-}
-
-.profile-header::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(88, 166, 255, 0.05) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.profile-header:hover {
-  border-color: #484f58;
 }
 
 .avatar-image,
 .avatar-fallback {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #30363d;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-.profile-header:hover .avatar-image,
-.profile-header:hover .avatar-fallback {
-  border-color: #58a6ff;
-  box-shadow: 0 0 40px rgba(88, 166, 255, 0.1);
+  border: 3px solid var(--md-sys-color-primary);
+  margin-bottom: 16px;
 }
 
 .avatar-fallback {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #21262d 0%, #30363d 100%);
-  color: #f0f6fc;
-  font-size: 44px;
-  font-weight: 700;
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
+  font-size: 36px;
+  font-weight: 800;
 }
 
 .profile-header h1 {
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 700;
-  color: #f0f6fc;
-  margin: 0;
-  letter-spacing: -0.5px;
+  color: var(--md-sys-color-on-surface);
 }
 
 .profile-meta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 15px;
-  color: #8b949e;
-  margin: 0;
-  flex-wrap: wrap;
-}
-
-.profile-meta i {
   font-size: 14px;
-  color: #484f58;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 4px;
 }
 
 .meta-separator {
-  color: #30363d;
+  margin: 0 6px;
+  opacity: 0.5;
 }
 
 .profile-headline {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px;
-  color: #c9d1d9;
-  margin: 0;
-  font-weight: 500;
-}
-
-.profile-headline i {
-  font-size: 14px;
-  color: #58a6ff;
-  opacity: 0.6;
+  font-size: 15px;
+  color: var(--md-sys-color-on-surface);
+  font-style: italic;
+  margin-top: 10px;
+  max-width: 500px;
 }
 
 .profile-actions {
-  margin-top: 8px;
+  margin-top: 18px;
 }
 
 .btn-edit {
@@ -119,687 +72,261 @@
   align-items: center;
   gap: 8px;
   padding: 10px 24px;
-  background: #21262d;
-  color: #c9d1d9;
-  border: 1px solid #30363d;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  transition: all 0.25s ease;
-  text-decoration: none;
-}
-
-.btn-edit i {
-  font-size: 15px;
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-radius: var(--md-shape-corner-full);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .btn-edit:hover {
-  background: #30363d;
-  border-color: #58a6ff;
-  color: #f0f6fc;
-  transform: translateY(-2px);
+  background-color: #5c556e;
+  color: #ffffff;
 }
 
-/* ===== PROFILE BODY ===== */
 .profile-body {
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-extra-large);
+  padding: 32px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 16px;
-  padding: 28px 32px;
-  transition: all 0.25s ease;
-}
-
-.profile-body:hover {
-  border-color: #484f58;
 }
 
 .bio-section h3,
 .career-section h3,
 .profile-links h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #f0f6fc;
-  margin: 0 0 12px 0;
-  letter-spacing: -0.3px;
 }
 
 .bio-section h3 i,
 .career-section h3 i,
 .profile-links h3 i {
-  font-size: 18px;
-  color: #58a6ff;
+  color: var(--md-sys-color-primary);
 }
 
 .bio-section p {
-  font-size: 16px;
-  color: #c9d1d9;
-  margin: 0;
-  line-height: 1.7;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .career-badge {
   display: inline-block;
-  padding: 6px 18px;
-  background: #0d1117;
-  border: 1px solid #30363d;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #c9d1d9;
+  padding: 6px 16px;
+  border-radius: var(--md-shape-corner-full);
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+  font-weight: 600;
+  font-size: 13px;
 }
 
-/* ===== SOCIAL LINKS ===== */
 .social-links-group {
   display: flex;
   gap: 12px;
-  flex-wrap: wrap;
 }
 
 .social-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 18px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.25s ease;
+  padding: 10px 20px;
+  background-color: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-full);
+  color: var(--md-sys-color-on-surface);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-.social-link i {
-  font-size: 18px;
+.social-link:hover {
+  background-color: var(--md-sys-color-surface-container-highest);
 }
 
-.github-link {
-  background: #0d1117;
-  color: #c9d1d9;
-  border: 1px solid #30363d;
-}
-
-.github-link:hover {
-  background: #21262d;
-  border-color: #58a6ff;
-  color: #f0f6fc;
-  transform: translateY(-2px);
-}
-
-.linkedin-link {
-  background: #0d1117;
-  color: #c9d1d9;
-  border: 1px solid #30363d;
-}
-
-.linkedin-link:hover {
-  background: #21262d;
-  border-color: #0a66c2;
-  color: #f0f6fc;
-  transform: translateY(-2px);
-}
-
-/* ===== SKILLS SECTION ===== */
+/* Skills Section */
 .skills-section {
-  background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 16px;
-  padding: 28px 32px;
-  transition: all 0.25s ease;
-}
-
-.skills-section:hover {
-  border-color: #484f58;
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-extra-large);
+  padding: 32px;
 }
 
 .skills-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .skills-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 20px;
-  font-weight: 600;
-  color: #f0f6fc;
-  margin: 0;
-  letter-spacing: -0.3px;
 }
 
 .skills-header h2 i {
-  font-size: 20px;
-  color: #58a6ff;
+  color: var(--md-sys-color-primary);
 }
 
 .btn-action {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 20px;
-  background: #238636;
-  color: #fff;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-
-.btn-action i {
-  font-size: 16px;
+  padding: 10px 22px;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-radius: var(--md-shape-corner-full);
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.2s ease;
 }
 
 .btn-action:hover {
-  background: #2ea043;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(35, 134, 54, 0.3);
+  background-color: #eaddff;
 }
 
-/* ===== SKILLS GRID ===== */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 
-/* ===== SKILL CARD ===== */
 .skill-card {
+  background-color: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-large);
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 16px 20px;
-  background: #0d1117;
-  border: 1px solid #21262d;
-  border-radius: 12px;
-  transition: all 0.25s ease;
-  gap: 12px;
+  gap: 14px;
+  transition: all 0.2s ease;
 }
 
 .skill-card:hover {
-  border-color: #30363d;
-  background: #161b22;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.skill-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  border-color: var(--md-sys-color-outline);
 }
 
 .skill-info h4 {
   font-size: 16px;
-  font-weight: 600;
-  color: #f0f6fc;
-  margin: 0;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
 }
 
 .skill-badge {
   display: inline-block;
-  padding: 4px 14px;
-  border-radius: 20px;
+  margin-top: 6px;
+  padding: 4px 12px;
+  border-radius: var(--md-shape-corner-full);
   font-size: 12px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  width: fit-content;
-}
-
-/* Proficiency Levels */
-.skill-badge.level-expert {
-  background: rgba(88, 166, 255, 0.15);
-  color: #58a6ff;
-  border: 1px solid rgba(88, 166, 255, 0.2);
-}
-
-.skill-badge.level-advanced {
-  background: rgba(46, 160, 67, 0.15);
-  color: #3fb950;
-  border: 1px solid rgba(46, 160, 67, 0.2);
-}
-
-.skill-badge.level-intermediate {
-  background: rgba(210, 153, 34, 0.15);
-  color: #d29922;
-  border: 1px solid rgba(210, 153, 34, 0.2);
-}
-
-.skill-badge.level-beginner {
-  background: rgba(248, 81, 73, 0.15);
-  color: #f85149;
-  border: 1px solid rgba(248, 81, 73, 0.2);
-}
-
-.skill-badge:not(.level-expert):not(.level-advanced):not(.level-intermediate):not(.level-beginner) {
-  background: #21262d;
-  color: #8b949e;
-  border: 1px solid #30363d;
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
 }
 
 .skill-experience {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #8b949e;
-  margin: 0;
-}
-
-.skill-experience i {
   font-size: 12px;
-  color: #484f58;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 8px;
 }
 
 .skill-card-actions {
   display: flex;
-  gap: 8px;
-  padding-top: 10px;
-  border-top: 1px solid #21262d;
+  gap: 14px;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-top: 12px;
 }
 
 .skill-link-edit,
 .skill-link-delete {
-  display: inline-flex;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.skill-link-edit i,
-.skill-link-delete i {
-  font-size: 13px;
 }
 
 .skill-link-edit {
-  background: #21262d;
-  color: #8b949e;
-}
-
-.skill-link-edit:hover {
-  background: #30363d;
-  color: #f0f6fc;
+  color: var(--md-sys-color-primary);
 }
 
 .skill-link-delete {
-  background: rgba(248, 81, 73, 0.1);
-  color: #f85149;
+  color: var(--md-sys-color-error);
 }
 
-.skill-link-delete:hover {
-  background: rgba(248, 81, 73, 0.2);
-  color: #ff7b72;
-}
-
-/* ===== EMPTY STATE ===== */
-.empty-state {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 24px;
-  text-align: center;
-  gap: 16px;
-  background: #0d1117;
-  border-radius: 12px;
-  border: 1px dashed #21262d;
-}
-
-.empty-state i {
-  font-size: 40px;
-  color: #30363d;
-}
-
-.empty-state p {
-  font-size: 16px;
-  color: #8b949e;
-  margin: 0;
-}
-
-.btn-empty-add {
-  display: inline-block;
-  padding: 8px 24px;
-  background: #238636;
-  color: #fff;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-
-.btn-empty-add:hover {
-  background: #2ea043;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(35, 134, 54, 0.3);
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 1024px) {
-  .profile-header {
-    padding: 28px 30px;
-  }
-
-  .avatar-image,
-  .avatar-fallback {
-    width: 100px;
-    height: 100px;
-    font-size: 38px;
-  }
-
-  .profile-header h1 {
-    font-size: 28px;
-  }
-
-  .skills-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  }
-}
-
-@media (max-width: 820px) {
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+@media (max-width: 600px) {
   .profile-container {
-    gap: 24px;
+    gap: 14px;
   }
-
   .profile-header {
-    padding: 24px 20px;
-    gap: 10px;
+    padding: 20px 14px;
+    border-radius: var(--md-shape-corner-large);
   }
-
-  .avatar-image,
-  .avatar-fallback {
-    width: 88px;
-    height: 88px;
-    font-size: 32px;
-    border-width: 3px;
-  }
-
-  .profile-header h1 {
-    font-size: 24px;
-  }
-
-  .profile-meta {
-    font-size: 14px;
-  }
-
-  .profile-headline {
-    font-size: 15px;
-  }
-
-  .profile-body {
-    padding: 22px 20px;
-    gap: 20px;
-  }
-
-  .bio-section p {
-    font-size: 15px;
-  }
-
-  .skills-section {
-    padding: 22px 20px;
-  }
-
-  .skills-header h2 {
-    font-size: 18px;
-  }
-
-  .skills-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-  }
-
-  .skill-card {
-    padding: 14px 16px;
-  }
-
-  .social-links-group {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .social-link {
-    justify-content: center;
-  }
-
-  .btn-edit {
-    padding: 8px 20px;
-    font-size: 14px;
-  }
-
-  .btn-action {
-    padding: 6px 16px;
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 480px) {
-  .profile-container {
-    gap: 20px;
-  }
-
-  .profile-header {
-    padding: 20px 16px;
-    border-radius: 12px;
-  }
-
-  .profile-header::before {
-    width: 200px;
-    height: 200px;
-  }
-
-  .avatar-image,
-  .avatar-fallback {
-    width: 72px;
-    height: 72px;
-    font-size: 28px;
-    border-width: 3px;
-  }
-
-  .profile-header h1 {
-    font-size: 20px;
-  }
-
-  .profile-meta {
-    font-size: 13px;
-    gap: 4px;
-  }
-
-  .profile-headline {
-    font-size: 14px;
-  }
-
-  .profile-body {
-    padding: 18px 16px;
-    border-radius: 12px;
-    gap: 16px;
-  }
-
-  .bio-section h3,
-  .career-section h3,
-  .profile-links h3 {
-    font-size: 16px;
-  }
-
-  .bio-section h3 i,
-  .career-section h3 i,
-  .profile-links h3 i {
-    font-size: 16px;
-  }
-
-  .bio-section p {
-    font-size: 14px;
-  }
-
-  .career-badge {
-    font-size: 13px;
-    padding: 4px 14px;
-  }
-
-  .profile-actions {
-    width: 100%;
-  }
-
-  .btn-edit {
-    width: 100%;
-    justify-content: center;
-    padding: 8px 16px;
-    font-size: 14px;
-  }
-
-  .skills-section {
-    padding: 18px 16px;
-    border-radius: 12px;
-  }
-
-  .skills-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .skills-header h2 {
-    font-size: 17px;
-    justify-content: center;
-  }
-
-  .btn-action {
-    justify-content: center;
-    padding: 8px 16px;
-    font-size: 13px;
-  }
-
-  .skills-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .skill-card {
-    padding: 12px 14px;
-    border-radius: 10px;
-  }
-
-  .skill-info h4 {
-    font-size: 14px;
-  }
-
-  .skill-badge {
-    font-size: 10px;
-    padding: 3px 10px;
-  }
-
-  .skill-experience {
-    font-size: 12px;
-  }
-
-  .skill-card-actions {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .skill-link-edit,
-  .skill-link-delete {
-    justify-content: center;
-    padding: 4px 10px;
-    font-size: 12px;
-  }
-
-  .empty-state {
-    padding: 32px 16px;
-  }
-
-  .empty-state i {
-    font-size: 32px;
-  }
-
-  .empty-state p {
-    font-size: 14px;
-  }
-
-  .btn-empty-add {
-    padding: 6px 18px;
-    font-size: 13px;
-  }
-
-  .social-link {
-    font-size: 13px;
-    padding: 6px 14px;
-  }
-}
-
-@media (max-width: 380px) {
-  .profile-header {
-    padding: 16px 12px;
-  }
-
   .avatar-image,
   .avatar-fallback {
     width: 60px;
     height: 60px;
     font-size: 22px;
+    margin-bottom: 10px;
   }
-
   .profile-header h1 {
-    font-size: 18px;
+    font-size: 20px;
   }
-
   .profile-meta {
     font-size: 12px;
   }
-
   .profile-headline {
     font-size: 13px;
   }
-
-  .profile-body {
-    padding: 14px 12px;
-  }
-
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .profile-body,
   .skills-section {
-    padding: 14px 12px;
+    padding: 16px 14px;
+    border-radius: var(--md-shape-corner-large);
+    gap: 16px;
   }
-
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
   .skill-card {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px;
+    padding: 10px 10px;
+    gap: 6px;
+    border-radius: var(--md-shape-corner-medium);
   }
-
-  .skill-card-actions {
-    flex-direction: row;
-    padding-top: 0;
-    border-top: none;
-  }
-
-  .skill-info {
-    flex: 1;
-  }
-
-  .btn-edit {
+  .skill-info h4 {
     font-size: 13px;
+    line-height: 1.3;
   }
-
-  .btn-action {
-    font-size: 12px;
-    padding: 6px 14px;
+  .skill-badge {
+    padding: 2px 6px;
+    font-size: 9.5px;
+    margin-top: 3px;
+  }
+  .skill-experience {
+    font-size: 10px;
+    margin-top: 4px;
+  }
+  .skill-card-actions {
+    padding-top: 6px;
+    gap: 8px;
+  }
+  .skill-link-edit,
+  .skill-link-delete {
+    font-size: 10.5px;
+    gap: 3px;
   }
 }

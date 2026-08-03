@@ -1,58 +1,88 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Home Dashboard{% endblock %}
+{% block title %}Dashboard · SkillOrbit{% endblock %}
 
 {% block extrastyle %}
-<link rel="stylesheet" href="{% static 'css/core/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/core/home.css' %}?v=5.0">
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-wrapper">
 
-    <!-- Top Hero Banner: Welcome Area -->
-    <header class="dashboard-hero-card">
-        <div class="hero-text-content">
-            <h1>Welcome back, {{ request.user.username }}</h1>
-            <p>Welcome to SkillOrbit. Manage your profile, explore skilled people, and continue your learning journey from one unified interface.</p>
+    <!-- Dashboard Hero Header -->
+    <section class="dashboard-hero-card">
+        <div class="hero-profile-group">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="{{ request.user.username }}" class="dashboard-hero-avatar">
+            {% else %}
+                <div class="dashboard-hero-avatar-fallback">{{ request.user.username|slice:":1"|upper }}</div>
+            {% endif %}
+            
+            <div class="hero-text-content">
+                <h1>Welcome back, {{ profile.full_name|default:request.user.username }}!</h1>
+                <p>Exchange skills, schedule peer sessions, and connect with developers across SkillOrbit.</p>
+            </div>
         </div>
-    </header>
 
-    <!-- Main Content Workspace Layout Split -->
+        <div class="hero-stats-row">
+            <div class="hero-stat-chip">
+                <i class="fas fa-lightbulb"></i>
+                <div class="stat-meta">
+                    <span class="stat-number">{{ user_skills.count }}</span>
+                    <span class="stat-label">Skills</span>
+                </div>
+            </div>
+            <a href="{% url 'my_connections' %}" class="hero-stat-chip">
+                <i class="fas fa-user-group"></i>
+                <div class="stat-meta">
+                    <span class="stat-number">{{ connections_count }}</span>
+                    <span class="stat-label">Connections</span>
+                </div>
+            </a>
+            <a href="{% url 'all_skill_requests' %}" class="hero-stat-chip">
+                <i class="fas fa-inbox"></i>
+                <div class="stat-meta">
+                    <span class="stat-number">{{ pending_requests_count }}</span>
+                    <span class="stat-label">Requests</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Dashboard Quick Action Navigation Bar -->
+    <section class="quick-actions-section">
+        <div class="quick-actions-grid">
+            <a href="{% url 'explore' %}" class="action-tile">
+                <div class="tile-icon explore-icon"><i class="fas fa-compass"></i></div>
+                <span class="tile-label">Explore Members</span>
+            </a>
+            <a href="{% url 'my_connections' %}" class="action-tile">
+                <div class="tile-icon chat-icon"><i class="fas fa-comments"></i></div>
+                <span class="tile-label">My Connections</span>
+            </a>
+            <a href="{% url 'community' %}" class="action-tile">
+                <div class="tile-icon community-icon"><i class="fas fa-users"></i></div>
+                <span class="tile-label">Community Rooms</span>
+            </a>
+            <a href="{% url 'add_skills' %}" class="action-tile">
+                <div class="tile-icon add-icon"><i class="fas fa-plus-circle"></i></div>
+                <span class="tile-label">Add New Skill</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Main Workspace Dashboard Grid -->
     <div class="dashboard-grid-layout">
         
-        <!-- Left Column: User Identity & Inventory -->
+        <!-- Left Column: Portfolio & Connections -->
         <div class="workspace-column">
             
-            <!-- Profile Overview Widget -->
-            <section class="dashboard-card profile-widget">
-                <div class="profile-card-header">
-                    {% if request.user.userprofile.avatar  %}
-                        <img src="{{ request.user.userprofile.avatar.url }}" alt="Profile Picture" class="dashboard-avatar">
-                    {% else %}
-                        <div class="dashboard-avatar-fallback">{{ request.user.username|slice:":1"|upper }}</div>
-                    {% endif %}
-                    
-                    <div class="profile-identity">
-                        <h3>{{ profile.full_name|default:request.user.username }}</h3>
-                        {% if profile.headline %}
-                            <p class="profile-headline">{{ profile.headline }}</p>
-                        {% endif %}
-                        <p class="profile-email">{{ request.user.email }}</p>
-                    </div>
-                </div>
-                
-                <div class="profile-action-footer">
-                    <a href="{% url 'profile' %}" class="btn-primary">View Profile</a>
-                    <a href="{% url 'edit_profile' %}" class="btn-secondary">Edit Profile</a>
-                </div>
-            </section>
-
-            <!-- My Skills Management Inventory -->
+            <!-- My Portfolio Skills -->
             <section class="dashboard-card">
                 <div class="card-title-row">
-                    <h2>My Skills</h2>
-                    <a href="{% url 'add_skills' %}" class="btn-inline-link"><i class="fas fa-plus-circle"></i> Add Skill</a>
+                    <h2><i class="fas fa-code"></i> My Skills</h2>
+                    <a href="{% url 'add_skills' %}" class="btn-inline-link"><i class="fas fa-plus"></i> Add Skill</a>
                 </div>
 
                 <div class="skills-stack-list">
@@ -60,91 +90,124 @@
                         <div class="skill-item-row">
                             <div class="skill-info">
                                 <strong>{{ user_skill.skill.name }}</strong>
-                                <span class="skill-exp">
-                                    {% if user_skill.years_of_experience %}
-                                        <i class="fas fa-clock"></i> {{ user_skill.years_of_experience }} years exp
-                                    {% endif %}
-                                </span>
+                                {% if user_skill.years_of_experience %}
+                                    <span class="skill-exp"><i class="fas fa-clock"></i> {{ user_skill.years_of_experience }} yrs exp</span>
+                                {% endif %}
                             </div>
-                            <span class="proficiency-badge badge-{{ user_skill.get_proficiency_display|lower }}">
+                            <span class="proficiency-badge">
                                 {{ user_skill.get_proficiency_display }}
                             </span>
                         </div>
                     {% empty %}
                         <div class="empty-state-card">
                             <i class="fas fa-lightbulb"></i>
-                            <p>You haven't added any skills to your portfolio yet.</p>
-                            <a href="{% url 'add_skills' %}" class="btn-empty-action">Add Your First Skill</a>
+                            <p>No skills added to your portfolio yet.</p>
+                            <a href="{% url 'add_skills' %}" class="btn-empty-action">Add Skill Now</a>
                         </div>
                     {% endfor %}
                 </div>
             </section>
-        </div>
 
-        <!-- Right Column: Operations & Roadmap -->
-        <div class="workspace-column">
-            
-            <!-- Quick Actions Router Dashboard Grid -->
+            <!-- Active Connections Quick Access -->
             <section class="dashboard-card">
-                <h2>Quick Actions</h2>
-                <div class="quick-actions-grid">
-                    <a href="{% url 'explore' %}" class="action-tile">
-                        <span class="tile-icon"><i class="fas fa-compass"></i></span>
-                        <span class="tile-label">Explore Users</span>
-                    </a>
-                    <a href="{% url 'my_connections' %}" class="action-tile">
-                        <span class="tile-icon"><i class="fas fa-user-friends"></i></span>
-                        <span class="tile-label">My Connections</span>
-                    </a>
-                    <a href="{% url 'profile' %}" class="action-tile">
-                        <span class="tile-icon"><i class="fas fa-user"></i></span>
-                        <span class="tile-label">View Profile</span>
-                    </a>
-                    <a href="{% url 'edit_profile' %}" class="action-tile">
-                        <span class="tile-icon"><i class="fas fa-sliders-h"></i></span>
-                        <span class="tile-label">Edit Profile</span>
-                    </a>
+                <div class="card-title-row">
+                    <h2><i class="fas fa-user-group"></i> Active Connections</h2>
+                    <a href="{% url 'my_connections' %}" class="btn-inline-link">View All</a>
+                </div>
+                <div class="skills-stack-list">
+                    {% for item in recent_connections %}
+                        <div class="skill-item-row">
+                            <div class="partner-meta-box">
+                                {% if item.profile.avatar %}
+                                    <img src="{{ item.profile.avatar.url }}" alt="{{ item.user.username }}" class="mini-avatar">
+                                {% else %}
+                                    <div class="mini-avatar-fallback">{{ item.user.username|slice:":1"|upper }}</div>
+                                {% endif %}
+                                <div class="skill-info">
+                                    <strong>{{ item.profile.full_name|default:item.user.username }}</strong>
+                                    <span class="skill-exp">@{{ item.user.username }}</span>
+                                </div>
+                            </div>
+                            <a href="{% url 'chat' item.user.id %}" class="btn-chat-mini">
+                                <i class="fas fa-paper-plane"></i> Chat
+                            </a>
+                        </div>
+                    {% empty %}
+                        <div class="empty-state-card">
+                            <i class="fas fa-user-plus"></i>
+                            <p>No active connections yet. Connect with members to trade skills!</p>
+                            <a href="{% url 'explore' %}" class="btn-empty-action">Find Members</a>
+                        </div>
+                    {% endfor %}
                 </div>
             </section>
 
-            <!-- Upcoming Features Roadmap Timeline -->
+        </div>
+
+        <!-- Right Column: Discussions & Sessions -->
+        <div class="workspace-column">
+            
+            <!-- Community Discussions -->
             <section class="dashboard-card">
-                <h2>Platform Roadmap</h2>
-                <ul class="roadmap-feature-list">
-                    <li>
-                        <span class="roadmap-indicator ongoing"></span>
-                        <div class="roadmap-text">
-                            <strong>Skill Requests</strong>
-                            <p>Match request routing queues for custom trade demands.</p>
+                <div class="card-title-row">
+                    <h2><i class="fas fa-comments"></i> Discussions</h2>
+                    <a href="{% url 'community' %}" class="btn-inline-link">View All</a>
+                </div>
+                <div class="skills-stack-list">
+                    {% for topic in recent_topics %}
+                        <a href="{% url 'community_room' topic.id %}" class="skill-item-row discussion-row">
+                            <div class="skill-info">
+                                <strong>{{ topic.title }}</strong>
+                                <span class="skill-exp">By @{{ topic.user.username }}</span>
+                            </div>
+                            <span class="roadmap-tag live">Join Chat</span>
+                        </a>
+                    {% empty %}
+                        <div class="empty-state-card">
+                            <i class="fas fa-comments"></i>
+                            <p>No active discussion boards yet.</p>
                         </div>
-                        <span class="roadmap-tag">Coming Soon</span>
-                    </li>
-                    <li>
-                        <span class="roadmap-indicator ongoing"></span>
-                        <div class="roadmap-text">
-                            <strong>Private Chat</strong>
-                            <p>Direct messaging pipeline with active connections.</p>
-                        </div>
-                        <span class="roadmap-tag">Coming Soon</span>
-                    </li>
-                    <li>
-                        <span class="roadmap-indicator planned"></span>
-                        <div class="roadmap-text">
-                            <strong>Learning Sessions</strong>
-                            <p>Interactive workspaces and joint digital whiteboards.</p>
-                        </div>
-                        <span class="roadmap-tag">Planned</span>
-                    </li>
-                    <li>
-                        <span class="roadmap-indicator planned"></span>
-                        <div class="roadmap-text">
-                            <strong>Real-Time Video Calls</strong>
-                            <p>WebRTC high-fidelity peer-to-peer visual rooms.</p>
-                        </div>
-                        <span class="roadmap-tag">Planned</span>
-                    </li>
-                </ul>
+                    {% endfor %}
+                </div>
             </section>
+
+            <!-- Scheduled Meetings Card -->
+            <section class="dashboard-card">
+                <div class="card-title-row">
+                    <h2><i class="fas fa-video"></i> Scheduled Meetings</h2>
+                    <a href="{% url 'sessions' %}" class="btn-inline-link">View All</a>
+                </div>
+                
+                <div class="skills-stack-list">
+                    {% for s in user_sessions %}
+                        <div class="skill-item-row">
+                            <div class="partner-meta-box">
+                                <div class="mini-avatar-fallback"><i class="fas fa-video"></i></div>
+                                <div class="skill-info">
+                                    <strong>{{ s.name }}</strong>
+                                    <span class="skill-exp">
+                                        With {% if s.host == request.user %}@{{ s.participant.username }}{% else %}@{{ s.host.username }}{% endif %} • {{ s.time_scheduled|date:"M d, h:i A" }}
+                                    </span>
+                                </div>
+                            </div>
+                            {% if s.meeting_link %}
+                                <a href="{{ s.meeting_link }}" target="_blank" class="btn-chat-mini">
+                                    <i class="fas fa-video"></i> Join
+                                </a>
+                            {% else %}
+                                <span class="proficiency-badge">{{ s.get_status_display }}</span>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <div class="empty-state-card">
+                            <i class="fas fa-calendar-plus"></i>
+                            <p>No upcoming meetings scheduled yet.</p>
+                            <a href="{% url 'sessions' %}" class="btn-empty-action">Schedule Session</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+
         </div>
 
     </div>

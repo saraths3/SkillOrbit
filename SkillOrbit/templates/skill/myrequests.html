@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load static %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="{% static 'css/skill/myrequests.css' %}">
 
+{% block title %}My Skill Requests · SkillOrbit{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/skill/requests.css' %}">
+{% endblock %}
+
+{% block content %}
 <div class="requests-wrapper">
     
     <!-- Page Header -->
     <div class="page-header">
-        <h1><i class="fas fa-inbox"></i> Requests</h1>
-        <p class="page-subtitle">Manage your skill requests and track their status</p>
+        <h1><i class="fas fa-paper-plane"></i> My Sent Requests</h1>
+        <p class="page-subtitle">Track skill exchange requests you have submitted to other members</p>
     </div>
 
     <!-- Navigation Tabs -->
@@ -46,22 +50,24 @@
                 <div class="request-footer">
                     <span class="request-meta">
                         <i class="fas fa-clock"></i>
-                        {{ r.created_at|timesince }} ago
+                        Submitted {{ r.created_at|timesince }} ago to @{{ r.to_user.username }}
                     </span>
                     {% if r.status == 'pending' %}
-                        <div class="request-actions">
-                            <a href="#" class="btn-action btn-cancel">
-                                <i class="fas fa-times"></i> Cancel
-                            </a>
-                        </div>
+                        <form method="post" class="request-actions">
+                            {% csrf_token %}
+                            <input type="hidden" name="request_id" value="{{ r.id }}">
+                            <button type="submit" name="action" value="cancel" class="btn-action btn-reject" onclick="return confirm('Cancel this skill request?');">
+                                <i class="fas fa-times"></i> Cancel Request
+                            </button>
+                        </form>
                     {% endif %}
                 </div>
             </div>
         {% empty %}
-            <div class="empty-state">
-                <i class="fas fa-inbox"></i>
+            <div class="empty-state" style="text-align: center; padding: 48px 0; color: var(--md-sys-color-on-surface-variant);">
+                <i class="fas fa-inbox" style="font-size: 40px; color: var(--md-sys-color-primary); margin-bottom: 12px;"></i>
                 <p>You haven't sent any skill requests yet.</p>
-                <a href="{% url 'explore' %}" class="btn-empty-action">
+                <a href="{% url 'explore' %}" class="btn-action btn-accept" style="margin-top: 14px; text-decoration: none;">
                     <i class="fas fa-compass"></i> Explore Members
                 </a>
             </div>
@@ -69,4 +75,4 @@
     </div>
 
 </div>
-{% endblock content %}
+{% endblock %}

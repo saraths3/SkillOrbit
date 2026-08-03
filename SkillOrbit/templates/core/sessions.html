@@ -1,1 +1,153 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mentorship & Peer Sessions · SkillOrbit{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/core/sessions.css' %}?v=3.0">
+{% endblock %}
+
+{% block content %}
+<div class="sessions-container">
+    
+    <!-- Hero Header -->
+    <div class="sessions-header">
+        <h1><i class="fas fa-video"></i> Live Learning Sessions</h1>
+        <p>Schedule 1-on-1 peer sessions, practice coding, and share learning goals with your connected partners.</p>
+    </div>
+
+    <!-- Active Scheduled Sessions Section -->
+    <!-- Active Scheduled Sessions Swiping Banner -->
+    <div class="scheduled-sessions-wrapper">
+        <h2 class="section-title"><i class="fas fa-calendar-check"></i> Latest Scheduled Sessions</h2>
+
+        <div class="scheduled-sessions-swipe-track">
+            {% for s in user_sessions %}
+                <div class="scheduled-swipe-card status-{{ s.status }}">
+                    <div class="card-top-bar">
+                        <span class="session-status-badge badge-{{ s.status }}">{{ s.get_status_display }}</span>
+                        <span class="session-time"><i class="fas fa-clock"></i> {{ s.time_scheduled|date:"M d, h:i A" }}</span>
+                    </div>
+
+                    <h3 class="session-title">{{ s.name }}</h3>
+                    {% if s.description %}
+                        <p class="session-desc">{{ s.description|truncatewords:20 }}</p>
+                    {% endif %}
+
+                    <div class="session-partners-row">
+                        <span><i class="fas fa-user-shield"></i> @{{ s.host.username }}</span>
+                        <span><i class="fas fa-user-check"></i> @{{ s.participant.username }}</span>
+                    </div>
+
+                    {% if s.meeting_link %}
+                        <a href="{{ s.meeting_link }}" target="_blank" class="btn-join-meeting">
+                            <i class="fas fa-video"></i> Join Meeting
+                        </a>
+                    {% endif %}
+
+                    <!-- Session Action Links -->
+                    <div class="session-card-actions">
+                        {% if s.status == 'pending' %}
+                            {% if request.user == s.participant %}
+                                <a href="{% url 'accept_session' s.id %}" class="btn-action-accept">
+                                    <i class="fas fa-check"></i> Accept
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'cancel_session' s.id %}" class="btn-action-cancel" onclick="return confirm('Cancel this session?');">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        {% elif s.status == 'accepted' %}
+                            <a href="{% url 'complete_session' s.id %}" class="btn-action-complete">
+                                <i class="fas fa-check-double"></i> Complete
+                            </a>
+                            <a href="{% url 'cancel_session' s.id %}" class="btn-action-cancel" onclick="return confirm('Cancel this session?');">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-sessions-slate">
+                    <i class="fas fa-calendar-times"></i>
+                    <h3>No Scheduled Sessions Yet</h3>
+                    <p>Select a connected partner below to schedule your first 1-on-1 peer session!</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Connected Skill Partners Section -->
+    <div class="connections-section-wrapper">
+        <h2 class="section-title"><i class="fas fa-users"></i> Connected Skill Partners</h2>
+        
+        <div class="connections-grid">
+            {% for connection in connections %}
+                <div class="connection-card">
+                    <!-- Partner Avatar -->
+                    <div class="connection-avatar">
+                        {% if connection.user_one == request.user %}
+                            {% if connection.user_two.userprofile.avatar %}
+                                <img src="{{ connection.user_two.userprofile.avatar.url }}" alt="{{ connection.user_two.username }}" class="avatar-img">
+                            {% else %}
+                                <span class="avatar-fallback">{{ connection.user_two.username|slice:":1"|upper }}</span>
+                            {% endif %}
+                        {% else %}
+                            {% if connection.user_one.userprofile.avatar %}
+                                <img src="{{ connection.user_one.userprofile.avatar.url }}" alt="{{ connection.user_one.username }}" class="avatar-img">
+                            {% else %}
+                                <span class="avatar-fallback">{{ connection.user_one.username|slice:":1"|upper }}</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Partner Meta -->
+                    <div class="connection-info">
+                        {% if connection.user_one == request.user %}
+                            <strong class="full-name">{{ connection.user_two.userprofile.full_name|default:connection.user_two.username }}</strong>
+                            <span class="username">@{{ connection.user_two.username }}</span>
+                        {% else %}
+                            <strong class="full-name">{{ connection.user_one.userprofile.full_name|default:connection.user_one.username }}</strong>
+                            <span class="username">@{{ connection.user_one.username }}</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="connection-actions">
+                        {% if connection.user_one == request.user %}
+                            <a href="{% url 'schedule_session_with_user' connection.user_two.id %}" class="btn-action-primary">
+                                <i class="fas fa-calendar-plus"></i> Schedule Session
+                            </a>
+                            <a href="{% url 'chat' connection.user_two.id %}" class="btn-outline">
+                                <i class="fas fa-comments"></i> Chat
+                            </a>
+                            <a href="{% url 'public_profile' connection.user_two.id %}" class="btn-outline">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                        {% else %}
+                            <a href="{% url 'schedule_session_with_user' connection.user_one.id %}" class="btn-action-primary">
+                                <i class="fas fa-calendar-plus"></i> Schedule Session
+                            </a>
+                            <a href="{% url 'chat' connection.user_one.id %}" class="btn-outline">
+                                <i class="fas fa-comments"></i> Chat
+                            </a>
+                            <a href="{% url 'public_profile' connection.user_one.id %}" class="btn-outline">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-connections-state">
+                    <i class="fas fa-user-group"></i>
+                    <h3>No Active Connections Yet</h3>
+                    <p>Explore members on SkillOrbit and send skill requests to connect and schedule sessions.</p>
+                    <a href="{% url 'explore' %}" class="btn-explore-now">
+                        <i class="fas fa-compass"></i> Explore Members
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

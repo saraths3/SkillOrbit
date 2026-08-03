@@ -1,0 +1,101 @@
+================================================================================
+          FEDORA WORKSTATION GUIDE: RUNNING DJANGO CHANNELS & WEBSOCKETS
+================================================================================
+
+This guide records every Fedora Workstation terminal command and system setup step 
+needed to run Django Channels, Redis/Valkey, PostgreSQL, and Daphne on Fedora.
+
+Compare this file with:
+  1. `fedora_setup_guide.txt`    -> (Fedora OS Terminal Commands & Services)
+  2. `live_chat_implementation.txt` -> (Exact SkillOrbit Code Locations)
+  3. `live_chat_tutorial.txt`       -> (Django Developer Theory & Concepts)
+
+================================================================================
+PART 1: FEDORA WORKSTATION SYSTEM SETUP
+================================================================================
+
+1. INSTALL REDIS / VALKEY ON FEDORA WORKSTATION:
+   Fedora 40+ uses `valkey` (a drop-in open-source replacement for Redis). 
+   `redis-cli` and `valkey-cli` work identically out of the box.
+
+   Command to install on Fedora:
+     sudo dnf install -y valkey
+
+2. START & ENABLE REDIS / VALKEY SERVICE ON FEDORA:
+   To make Redis/Valkey run in the background on Fedora:
+
+     sudo systemctl enable --now valkey
+     # (or if using traditional redis package: sudo systemctl enable --now redis)
+
+   If running in a container or subshell without systemd:
+     valkey-server --daemonize yes
+
+3. VERIFY REDIS / VALKEY CONNECTION:
+   Test if the server is responding on port 6379:
+
+     redis-cli ping
+
+   Expected Output:
+     PONG
+
+--------------------------------------------------------------------------------
+PART 2: POSTGRESQL DATABASE SETUP ON FEDORA WORKSTATION
+--------------------------------------------------------------------------------
+
+1. START POSTGRESQL SERVICE ON FEDORA:
+   Before running `python manage.py runserver`, ensure PostgreSQL is active:
+
+     sudo systemctl start postgresql
+
+2. CREATE DATABASE AND USER (IF SETTING UP A NEW PROJECT):
+     sudo -u postgres psql -c "CREATE DATABASE skillorbit_db;"
+     sudo -u postgres psql -c "CREATE USER skillorbit_user WITH PASSWORD 'skillorbit_password';"
+     sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE skillorbit_db TO skillorbit_user;"
+
+
+--------------------------------------------------------------------------------
+PART 3: PYTHON VIRTUAL ENVIRONMENT & PIP PACKAGES
+--------------------------------------------------------------------------------
+
+1. CREATE AND ACTIVATE VIRTUALENV ON FEDORA:
+     python3 -m venv venv
+     source venv/bin/activate
+
+2. INSTALL DJANGO & CHANNELS PACKAGES:
+     pip install --upgrade pip
+     pip install django channels daphne channels_redis psycopg2-binary
+
+
+--------------------------------------------------------------------------------
+PART 4: RUNNING THE PROJECT ON FEDORA WORKSTATION
+--------------------------------------------------------------------------------
+
+1. APPLY MIGRATIONS:
+     python SkillOrbit/manage.py migrate
+
+2. RUN THE DEVELOPMENT SERVER (DAPHNE ASGI):
+     python SkillOrbit/manage.py runserver
+
+   Output on terminal:
+     Performing system checks...
+     System check identified no issues (0 silenced).
+     Starting ASGI/Daphne development server at http://127.0.0.1:8000/
+
+3. ACCESS IN BROWSER:
+   - Open http://127.0.0.1:8000 in Firefox / Chrome / Brave on Fedora Workstation.
+   - Open a second private window to log into a second account and test real-time chat!
+
+
+================================================================================
+                   FEDORA TROUBLESHOOTING CHEAT SHEET
+================================================================================
+
+• Error: "connection to server at 127.0.0.1 port 5432 failed: Connection refused"
+  Fix: PostgreSQL is stopped. Run `sudo systemctl start postgresql`.
+
+• Error: "Error 111 connecting to 127.0.0.1:6379. Connection refused"
+  Fix: Redis/Valkey is stopped. Run `sudo systemctl start valkey` or `valkey-server --daemonize yes`.
+
+• WebSockets not connecting (ws:// status disconnected)?
+  Fix: Make sure `'daphne'` is at line #1 of `INSTALLED_APPS` in `settings.py` so `runserver` boots as ASGI/Daphne server!
+================================================================================

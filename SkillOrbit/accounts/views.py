@@ -17,6 +17,7 @@ def signin_view(request):
         if user is not None:
             UserProfile.objects.get_or_create(user=user)
             login(request, user)
+            messages.success(request, f'Welcome back, {user.username}!')
             return redirect('explore') 
         else:
             messages.error(request, "Invalid email or password.")
@@ -41,7 +42,10 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            messages.success(request, 'Account created successfully!')
             return redirect('profile')
+        else:
+            messages.error(request, 'Failed to create account. Please check the form.')
     else:
         form = User_RegistrationForm()
     context = {
@@ -53,8 +57,10 @@ def forgot_password_view(request):
     if request.method == 'POST':
         data = request.POST
         email = data.get('email')
-        if CustomUser.objects.filter(email = email).exists():
-            print('User Exists')
+        if CustomUser.objects.filter(email=email).exists():
+            messages.success(request, 'Password reset instructions have been sent to your email.')
+        else:
+            messages.error(request, 'No user found with that email address.')
         return render(request, 'accounts/forgot_password.html')
     return render(request, 'accounts/forgot_password.html')
 
@@ -63,6 +69,7 @@ def reset_password_view(request):
 
 def signout_view(request):
     logout(request)
+    messages.success(request, 'You have been logged out successfully.')
     return redirect('signin')
 
 #Profile
@@ -80,16 +87,20 @@ def profile_view(request):
 
 @login_required(login_url="signin")
 def edit_profile_view(request):
-    profile = get_object_or_404(UserProfile, user=request.user)
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Profile updated successfully!')
             return redirect("profile")
+        else:
+            messages.error(request, 'Failed to update profile. Please check the form.')
     else:
         form = UserProfileForm(instance=profile)
     context = {
         "form": form,
+        "profile": profile,
     }
     return render(request, "accounts/edit_profile.html", context)
 

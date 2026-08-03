@@ -1,176 +1,99 @@
+{% extends 'base.html' %}
 {% load static %}
-{% load socialaccount %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkillOrbit · Sign Up</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+{% block title %}Create Account · SkillOrbit{% endblock %}
+
+{% block extrastyle %}
   <link rel="stylesheet" href="{% static 'css/accounts/signup.css' %}">
-</head>
-<body>
-  <div class="auth-wrapper">
-    <div class="auth-container">
-      <div class="auth-header">
-        <div class="auth-logo">
-          <i class="fas fa-rocket"></i>
-          <span>SkillOrbit</span>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <i class="fas fa-circle-nodes"></i>
+        <span>SkillOrbit</span>
+      </div>
+      <h1>Create Account</h1>
+      <p class="auth-subtitle">Join the SkillOrbit community and start your learning journey</p>
+    </div>
+
+    <form method="post" action="" class="auth-form">
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="error-banner" style="padding: 12px 16px; border-radius: var(--md-shape-corner-medium); background-color: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); font-size: 13px; margin-bottom: 12px;">
+          <i class="fas fa-exclamation-circle"></i>
+          <p>Please correct the errors in the form below.</p>
         </div>
-        <h1>Create Account</h1>
-        <p class="auth-subtitle">Join the SkillOrbit community and start your learning journey</p>
+      {% endif %}
+
+      <div class="input-group">
+        <div class="input-wrapper">
+          <span class="input-icon"><i class="fas fa-user"></i></span>
+          <input type="text" id="username" name="username" placeholder="Username" required autofocus>
+        </div>
       </div>
 
-      <form method="post" action="" class="auth-form">
-        {% csrf_token %}
-        
-        {% if form.errors %}
-          <div class="error-banner">
-            <i class="fas fa-exclamation-circle"></i>
-            <div class="error-list">
-              {% for field in form %}
-                {% for error in field.errors %}
-                  <p><strong>{{ field.label }}:</strong> {{ error }}</p>
-                {% endfor %}
-              {% endfor %}
-              {% for error in form.non_field_errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
-
-        <div class="input-group">
-          <div class="input-wrapper">
-            <span class="input-icon">
-              <i class="fas fa-user"></i>
-            </span>
-            <input type="text" id="full_name" name="{{ form.full_name.name|default:'full_name' }}" value="{{ form.full_name.value|default:'' }}" placeholder="Full Name" required>
-          </div>
+      <div class="input-group">
+        <div class="input-wrapper">
+          <span class="input-icon"><i class="fas fa-envelope"></i></span>
+          <input type="email" id="email" name="email" placeholder="Email address" required>
         </div>
-
-        <div class="input-group">
-          <div class="input-wrapper">
-            <span class="input-icon">
-              <i class="fas fa-at"></i>
-            </span>
-            <input type="text" id="username" name="{{ form.username.name|default:'username' }}" value="{{ form.username.value|default:'' }}" placeholder="Username" required>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-wrapper">
-            <span class="input-icon">
-              <i class="fas fa-envelope"></i>
-            </span>
-            <input type="email" id="email" name="{{ form.email.name|default:'email' }}" value="{{ form.email.value|default:'' }}" placeholder="Email address" required>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-wrapper">
-            <span class="input-icon">
-              <i class="fas fa-lock"></i>
-            </span>
-            <input type="password" id="password1" name="{{ form.password1.name|default:'password1' }}" placeholder="Password" required>
-            <button type="button" class="toggle-password" aria-label="Toggle password visibility">
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-          <span class="password-hint">Must be at least 8 characters</span>
-        </div>
-
-        <div class="input-group">
-          <div class="input-wrapper">
-            <span class="input-icon">
-              <i class="fas fa-check-circle"></i>
-            </span>
-            <input type="password" id="password2" name="{{ form.password2.name|default:'password2' }}" placeholder="Confirm Password" required>
-            <button type="button" class="toggle-password" aria-label="Toggle password visibility">
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="form-terms">
-          <label class="terms-check">
-            <input type="checkbox" required>
-            <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
-          </label>
-        </div>
-
-        <button type="submit" class="btn-submit">
-          <i class="fas fa-user-plus"></i> Create Account
-        </button>
-
-        <div class="divider">
-          <span>or continue with</span>
-        </div>
-
-        <a href="{% provider_login_url 'google' %}" class="btn-google">
-          <i class="fab fa-google"></i> Sign up with Google
-        </a>
-
-        {% if messages %}
-          <div class="messages-container">
-            {% for message in messages %}
-              <div class="message-item message-{{ message.tags }}">
-                <i class="fas fa-info-circle"></i>
-                {{ message }}
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </form>
-
-      <div class="auth-footer">
-        <p>Already have an account? <a href="{% url 'signin' %}" class="signin-link">Sign in</a></p>
       </div>
+
+      <div class="input-group">
+        <div class="input-wrapper">
+          <span class="input-icon"><i class="fas fa-lock"></i></span>
+          <input type="password" id="password1" name="password1" placeholder="Password" required>
+          <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-wrapper">
+          <span class="input-icon"><i class="fas fa-lock"></i></span>
+          <input type="password" id="password2" name="password2" placeholder="Confirm password" required>
+          <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">
+        <i class="fas fa-user-plus"></i> Create Account
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a href="{% url 'signin' %}">Sign In</a></p>
     </div>
   </div>
+</div>
+{% endblock %}
 
-  <script>
-    // Toggle password visibility for all password fields
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleButtons = document.querySelectorAll('.toggle-password');
-      
-      toggleButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const input = this.closest('.input-wrapper').querySelector('input');
-          const icon = this.querySelector('i');
-          
-          if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-          } else {
-            input.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-          }
-        });
-      });
-
-      // Password match validation (optional visual feedback)
-      const password1 = document.getElementById('password1');
-      const password2 = document.getElementById('password2');
-      
-      if (password1 && password2) {
-        function validatePasswordMatch() {
-          if (password2.value.length > 0) {
-            if (password1.value === password2.value) {
-              password2.style.borderColor = '#3fb950';
-            } else {
-              password2.style.borderColor = '#f85149';
-            }
-          }
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggleButtons = document.querySelectorAll('.toggle-password');
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const input = this.closest('.input-wrapper').querySelector('input');
+        const icon = this.querySelector('i');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          input.type = 'password';
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
         }
-        
-        password1.addEventListener('input', validatePasswordMatch);
-        password2.addEventListener('input', validatePasswordMatch);
-      }
+      });
     });
-  </script>
-</body>
-</html>
+  });
+</script>
+{% endblock %}

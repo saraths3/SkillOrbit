@@ -1,23 +1,26 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load static %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="{% static 'css/skill/connections.css' %}">
 
+{% block title %}My Connections · SkillOrbit{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/skill/connections.css' %}">
+{% endblock %}
+
+{% block content %}
 <div class="connections-wrapper">
-    
-    <!-- Page Header -->
+
     <div class="page-header">
         <h1><i class="fas fa-user-friends"></i> My Connections</h1>
-        <p class="page-subtitle">Connect with skilled professionals and expand your network</p>
+        <p class="page-subtitle">
+            Connect with skilled members and launch real-time discussions
+        </p>
     </div>
 
-    <!-- Connections Grid -->
     <div class="connections-grid">
         {% for connection in connections %}
             <div class="connection-card">
-                
-                <!-- Avatar Section -->
+                <!-- Avatar -->
                 <div class="connection-avatar">
                     {% if connection.user_one == request.user %}
                         {% if connection.user_two.userprofile.avatar %}
@@ -25,7 +28,7 @@
                         {% else %}
                             <span class="avatar-fallback">{{ connection.user_two.username|slice:":1"|upper }}</span>
                         {% endif %}
-                    {% elif connection.user_two == request.user %}
+                    {% else %}
                         {% if connection.user_one.userprofile.avatar %}
                             <img src="{{ connection.user_one.userprofile.avatar.url }}" alt="{{ connection.user_one.username }}" class="avatar-img">
                         {% else %}
@@ -37,49 +40,44 @@
                 <!-- User Info -->
                 <div class="connection-info">
                     {% if connection.user_one == request.user %}
-                        {% if connection.user_two.full_name %}
-                            <strong class="full-name">{{ connection.user_two.full_name }}</strong>
-                        {% endif %}
+                        <strong class="full-name">{{ connection.user_two.full_name|default:connection.user_two.username }}</strong>
                         <span class="username"><i class="fas fa-at"></i> {{ connection.user_two.username }}</span>
                         <span class="email"><i class="fas fa-envelope"></i> {{ connection.user_two.email }}</span>
-                    {% elif connection.user_two == request.user %}
-                        {% if connection.user_one.full_name %}
-                            <strong class="full-name">{{ connection.user_one.full_name }}</strong>
-                        {% endif %}
+                    {% else %}
+                        <strong class="full-name">{{ connection.user_one.full_name|default:connection.user_one.username }}</strong>
                         <span class="username"><i class="fas fa-at"></i> {{ connection.user_one.username }}</span>
                         <span class="email"><i class="fas fa-envelope"></i> {{ connection.user_one.email }}</span>
                     {% endif %}
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Buttons -->
                 <div class="connection-actions">
                     {% if connection.user_one == request.user %}
-                        <a href="{% url 'public_profile' connection.user_two.id %}" class="btn btn-outline">
-                            <i class="fas fa-user"></i> View Profile
+                        <a href="{% url 'chat' connection.user_two.id %}" class="btn-action-primary">
+                            <i class="fas fa-comments"></i> Start Chat
                         </a>
-                    {% elif connection.user_two == request.user %}
-                        <a href="{% url 'public_profile' connection.user_one.id %}" class="btn btn-outline">
-                            <i class="fas fa-user"></i> View Profile
+                        <a href="{% url 'public_profile' connection.user_two.id %}" class="btn-outline">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                    {% else %}
+                        <a href="{% url 'chat' connection.user_one.id %}" class="btn-action-primary">
+                            <i class="fas fa-comments"></i> Start Chat
+                        </a>
+                        <a href="{% url 'public_profile' connection.user_one.id %}" class="btn-outline">
+                            <i class="fas fa-user"></i> Profile
                         </a>
                     {% endif %}
-                    
-                    <a href="{% url 'chat' connection.user_two.id %}"><button class="btn btn-outline">
-                        <i class="fas fa-comment"></i> Chat
-                    </button></a>
-                    
-                    <a href=""><button class="btn btn-outline">
-                        <i class="fas fa-calendar-plus"></i> Schedule Session
-                    </button></a>
-                    
+                    <a href="{% url 'sessions' %}" class="btn-outline">
+                        <i class="fas fa-calendar-plus"></i> Session
+                    </a>
                 </div>
-
             </div>
         {% empty %}
-            <div class="empty-state">
-                <i class="fas fa-user-friends"></i>
-                <p>You don't have any connections yet.</p>
-                <p class="empty-subtitle">Start connecting with skilled professionals on SkillOrbit.</p>
-                <a href="{% url 'explore' %}" class="btn-empty-action">
+            <div class="empty-connections-state">
+                <i class="fas fa-user-group"></i>
+                <h3>No active connections yet</h3>
+                <p>Explore members on SkillOrbit and send skill requests to connect.</p>
+                <a href="{% url 'explore' %}" class="btn-explore-now">
                     <i class="fas fa-compass"></i> Explore Members
                 </a>
             </div>

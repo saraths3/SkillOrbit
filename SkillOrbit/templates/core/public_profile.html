@@ -1,57 +1,59 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-    {% if user.full_name %}{{ user.full_name }}{% else %}{{ user.username }}{% endif %}'s Profile
-{% endblock %}
+{% block title %}{{ user.full_name|default:user.username }}'s Profile{% endblock %}
 
 {% block extrastyle %}
 <link rel="stylesheet" href="{% static 'css/core/public_profile.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="public-profile-wrapper">
+<div class="public-profile-container">
 
-    <!-- Profile Identity Header Section -->
-    <header class="profile-header-card">
-        <div class="profile-avatar-container">
-            {% if user.userprofile.avatar %}
-                 <img src="{{ user.userprofile.avatar.url }}" alt="{{ user.username }}'s Avatar" class="public-avatar">
-            {% else %}
-                 <!-- Text based fallback identity ring if no asset exists -->
-                 <div class="public-avatar-fallback">{{ user.username|slice:":1"|upper }}</div>
-            {% endif %}
+    <!-- Profile Card Header -->
+    <div class="public-profile-card">
+        {% if user.userprofile.avatar %}
+             <img src="{{ user.userprofile.avatar.url }}" alt="{{ user.username }}" class="public-avatar">
+        {% else %}
+             <div class="public-avatar-fallback">{{ user.username|slice:":1"|upper }}</div>
+        {% endif %}
+
+        <h1>{{ user.full_name|default:user.username }}</h1>
+        <span class="public-handle">@{{ user.username }} • {{ user.email }}</span>
+        
+        {% if user.userprofile.headline %}
+            <p class="public-bio">{{ user.userprofile.headline }}</p>
+        {% endif %}
+
+        <div class="public-actions">
+            <a href="{% url 'skill_request' %}?user_id={{ user.id }}" class="btn-request-skill">
+                <i class="fas fa-handshake"></i> Send Skill Request
+            </a>
+
         </div>
+    </div>
 
-        <div class="profile-info-stack">
-            <h1>{{ user.full_name|default:user.username }}</h1>
-            <span class="profile-handle"><i class="fas fa-at"></i> {{ user.username }}</span>
-            <p class="profile-email"><i class="fas fa-envelope"></i> {{ user.email }}</p>
-        </div>
-        <a href="{% url 'skill_request' %}?user_id={{ user.id }}" class="btn-skill-request">
-            <i class="fas fa-handshake"></i> Send Skill Request
-        </a>
-    </header>
-
-    <!-- Corrected Skills Matrix Loop Block -->
-    <section class="profile-skills-section">
-        <h3><i class="fas fa-code"></i> Verified Skillset</h3>
-        <div class="skills-grid-layout">
+    <!-- Verified Skillset Section -->
+    <div class="md-card">
+        <h3 style="font-size: 18px; font-weight: 700; color: var(--md-sys-color-on-surface); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-code" style="color: var(--md-sys-color-primary);"></i> Verified Skillset
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
             {% for user_skill in user.userskill_set.all %}
-                <div class="profile-skill-badge">
-                    <span class="skill-name">{{ user_skill.skill.name }}</span>
-                    <span class="skill-level-pill level-{{ user_skill.proficiency|lower }}">
+                <div style="background-color: var(--md-sys-color-surface-container-high); border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-shape-corner-large); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-weight: 600; color: var(--md-sys-color-on-surface); font-size: 14px;">{{ user_skill.skill.name }}</span>
+                    <span class="md-chip" style="background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary);">
                         {{ user_skill.get_proficiency_display }}
                     </span>
                 </div>
             {% empty %}
-                <div class="no-skills-msg">
-                    <i class="fas fa-tools"></i>
-                    <p>This member has not cataloged any skills yet.</p>
+                <div style="text-align: center; padding: 24px; color: var(--md-sys-color-on-surface-variant); grid-column: 1 / -1;">
+                    <i class="fas fa-tools" style="font-size: 32px; color: var(--md-sys-color-primary); margin-bottom: 8px;"></i>
+                    <p>This member has not listed any skills yet.</p>
                 </div>
             {% endfor %}
         </div>
-    </section>
+    </div>
 
 </div>
 {% endblock %}

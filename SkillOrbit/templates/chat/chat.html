@@ -1,30 +1,172 @@
 {% extends 'base.html' %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+{% load static %}
+
+{% block title %}Chat with {{ user_two.full_name|default:user_two.username }}{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/chat/chat.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="chat-container">
+
+    <!-- Header with user profile details & status badge -->
+    <div class="chat-header">
+        <div class="chat-user-info">
+            <div class="chat-avatar-wrapper">
+                {% if user_two.userprofile.avatar %}
+                    <img src="{{ user_two.userprofile.avatar.url }}" alt="{{ user_two.username }}" class="chat-avatar">
+                {% else %}
+                    <div class="chat-avatar-fallback">{{ user_two.username|slice:":1"|upper }}</div>
+                {% endif %}
+                <span class="chat-status-dot"></span>
+            </div>
+            <div class="chat-user-details">
+                <h2>{{ user_two.full_name|default:user_two.username }}</h2>
+                <p>@{{ user_two.username }} • {{ user_two.userprofile.career_level|title }}</p>
+            </div>
+        </div>
+
+        <div class="chat-header-actions">
+            <div id="ws-status" class="ws-status-badge">
+                <i class="fas fa-circle"></i> <span>Connecting...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Message List -->
+    <div class="chat-box" id="chat-box">
+        {% for msg in chat_messages %}
+            {% if msg.sender == request.user %}
+                <div class="my-message">
+                    <p>{{ msg.message }}</p>
+                    <small>{{ msg.created_at|date:"h:i A" }}</small>
+                </div>
+            {% else %}
+                <div class="other-message">
+                    <p>{{ msg.message }}</p>
+                    <small>{{ msg.created_at|date:"h:i A" }}</small>
+                </div>
+            {% endif %}
+        {% empty %}
+            <div class="no-messages-notice" id="empty-notice">
+                <i class="fas fa-paper-plane"></i>
+                <h3>Start the Conversation</h3>
+                <p>Connect and exchange skill insights with {{ user_two.full_name|default:user_two.username }} in real time.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Chat Form / Input -->
+    <form id="chat-form" class="chat-form">
+        <div class="chat-input-wrapper">
+            <input
+                type="text"
+                id="message-input"
+                placeholder="Type a message to @{{ user_two.username }}..."
+                autocomplete="off"
+                required
+            >
+        </div>
+        <button id="send-button" type="submit">
+            <i class="fas fa-paper-plane"></i>
+            <span>Send</span>
+        </button>
+    </form>
+
+</div>
+
 <script>
-    const conversationId = "{{ conversation.id }}";
+const targetUserId = "{{ user_two.id }}";
+const currentUserId = "{{ request.user.id }}";
+const chatBox = document.getElementById("chat-box");
+const wsStatus = document.getElementById("ws-status");
+const chatForm = document.getElementById("chat-form");
+const messageInput = document.getElementById("message-input");
 
-    const chatSocket = new WebSocket(
-        "ws://" + window.location.host + "/ws/chat/" + conversationId + "/"
-    );
+// Auto scroll to bottom on initial render
+chatBox.scrollTop = chatBox.scrollHeight;
 
-    chatSocket.onopen = function () {
-        console.log("Connected!");
-    };
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.innerText = text;
+    return div.innerHTML;
+}
 
-    chatSocket.onclose = function () {
-        console.log("Disconnected!");
-    };
+function updateWsStatus(connected) {
+    if (connected) {
+        wsStatus.className = "ws-status-badge";
+        wsStatus.innerHTML = '<i class="fas fa-circle"></i> <span>Connected</span>';
+    } else {
+        wsStatus.className = "ws-status-badge disconnected";
+        wsStatus.innerHTML = '<i class="fas fa-circle"></i> <span>Disconnected</span>';
+    }
+}
+
+const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+const chatSocket = new WebSocket(
+    wsProtocol + window.location.host + "/ws/chat/" + targetUserId + "/"
+);
+
+chatSocket.onopen = function(e) {
+    updateWsStatus(true);
+};
+
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const emptyNotice = document.getElementById("empty-notice");
+    if (emptyNotice) {
+        emptyNotice.remove();
+    }
+
+    // Convert both IDs to string for strict comparison
+    const isSelf = String(data.sender_id) === String(currentUserId);
+    const messageClass = isSelf ? "my-message" : "other-message";
+    
+    const messageElement = document.createElement("div");
+    messageElement.className = messageClass;
+    messageElement.innerHTML = `
+        <p>${escapeHtml(data.message)}</p>
+        <small>${data.created_at || 'Just now'}</small>
+    `;
+
+    chatBox.appendChild(messageElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
+};
+
+chatSocket.onclose = function(e) {
+    console.log("Chat WebSocket disconnected.");
+    updateWsStatus(false);
+};
+
+function sendMessage() {
+    const message = messageInput.value.trim();
+
+    if (message === "" || chatSocket.readyState !== WebSocket.OPEN) {
+        return;
+    }
+
+    chatSocket.send(JSON.stringify({
+        "message": message
+    }));
+
+    messageInput.value = "";
+}
+
+// Form submit event handler (triggers on Enter key and button click)
+chatForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    sendMessage();
+});
+
+// Extra keydown listener for enter key
+messageInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
 </script>
-<body>
-    {% block content %}
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/chat/chat.css' %}">
-{% endblock content %}
-</body>
-</html>
+
+{% endblock %}

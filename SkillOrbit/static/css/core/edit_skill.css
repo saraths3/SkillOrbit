@@ -1,122 +1,157 @@
-/* ==========================================================================
-   Global Window Setup (From File #1 Canvas Layout)
-   ========================================================================== */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: system-ui, -apple-system, sans-serif;
-    background-color: #fafafa;
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
+/* ===== ADD / EDIT SKILL MATERIAL DESIGN 3 STYLES ===== */
+.skill-form-wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 10px 0;
 }
 
-/* ==========================================================================
-   Form Panel Container (From File #3 Form Specs)
-   ========================================================================== */
-.edit-container {
-    background: #fff;
-    border: 1px solid #eee;
-    padding: 30px;
-    max-width: 500px;
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 6px;
+.skill-form-card {
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-extra-large);
+  padding: 40px 36px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.edit-container h2 {
-    margin: 0 0 24px 0;
-    font-size: 1.75rem;
-    color: #000;
-    text-align: left;
+.skill-form-header {
+  text-align: center;
+  margin-bottom: 28px;
 }
 
-/* ==========================================================================
-   Dynamic Django Form Field Bindings (Targets {{ form }} Output)
-   ========================================================================== */
-.form-content-layout p,
-.form-content-layout ul {
-    margin: 0 0 20px 0;
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    padding: 0;
+.skill-form-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
-.form-content-layout label {
-    font-weight: 500;
-    margin-bottom: 6px;
-    font-size: 0.95rem;
-    color: #000;
-    text-align: left;
+.skill-form-header h1 i {
+  color: var(--md-sys-color-primary);
 }
 
-.form-content-layout input[type="text"],
-.form-content-layout input[type="number"],
-.form-content-layout select,
-.form-content-layout textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 0.95rem;
-    font-family: inherit;
-    color: #333;
-    background-color: #fff;
+.skill-form-header p {
+  font-size: 14px;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 4px;
 }
 
-.form-content-layout input:focus,
-.form-content-layout select:focus {
-    border-color: #000;
-    outline: none;
+.skill-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Error Element Configuration from File #3 */
-.form-content-layout .errorlist {
-    margin: 0 0 8px 0;
-    padding: 0;
-    color: #cf1322;
-    font-size: 0.85rem;
-    text-align: left;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-/* ==========================================================================
-   Form Trigger Actions (From File #1 & File #3 Patterns)
-   ========================================================================== */
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-medium);
+  color: var(--md-sys-color-on-surface);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px rgba(208, 188, 255, 0.15);
+}
+
 .form-actions {
-    margin-top: 30px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
 }
 
-button[type="submit"] {
-    padding: 10px 20px;
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    box-sizing: border-box;
+.btn-submit-skill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  padding: 13px;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border: none;
+  border-radius: var(--md-shape-corner-full);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-button[type="submit"]:hover {
-    background-color: #222;
+.btn-submit-skill:hover {
+  background-color: #eaddff;
 }
 
-.btn-cancel {
-    color: #666;
-    text-decoration: none;
-    font-size: 0.95rem;
+.btn-cancel-skill {
+  padding: 13px 22px;
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-full);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
 }
 
-.btn-cancel:hover {
-    color: #000;
-    text-decoration: underline;
+.btn-cancel-skill:hover {
+  background-color: #5c556e;
+  color: #ffffff;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+@media (max-width: 600px) {
+  .skill-form-wrapper {
+    padding: 10px 0;
+  }
+  .skill-form-card {
+    padding: 20px 14px;
+    border-radius: var(--md-shape-corner-large);
+  }
+  .skill-form-header h1 {
+    font-size: 20px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .form-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+  .btn-submit-skill,
+  .btn-cancel-skill {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
 }
