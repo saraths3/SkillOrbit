@@ -3,9 +3,10 @@ from .models import *
 from django.contrib.auth.forms import UserCreationForm
 
 class User_RegistrationForm(UserCreationForm):
+    full_name = forms.CharField(max_length=100, required=True)
+    email = forms.EmailField(required=True)
+
     class Meta(UserCreationForm.Meta):
-        full_name = forms.CharField(max_length = 100)
-        email = forms.EmailField()
         model = CustomUser
         fields = (
             'full_name',
@@ -33,4 +34,3 @@ class UserProfileForm(forms.ModelForm):
             'github_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://github.com/username'}),
             'linkedin_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://linkedin.com/in/username'}),
         }
-        

@@ -42,8 +42,15 @@
 
       <div class="input-group">
         <div class="input-wrapper">
+          <span class="input-icon"><i class="fas fa-id-card"></i></span>
+          <input type="text" id="full_name" name="full_name" value="{{ request.POST.full_name|default:'' }}" placeholder="Full Name" required autofocus>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-wrapper">
           <span class="input-icon"><i class="fas fa-user"></i></span>
-          <input type="text" id="username" name="username" value="{{ request.POST.username|default:'' }}" placeholder="Username" required minlength="3" autofocus>
+          <input type="text" id="username" name="username" value="{{ request.POST.username|default:'' }}" placeholder="Username" required minlength="3">
         </div>
       </div>
 

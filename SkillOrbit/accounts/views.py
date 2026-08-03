@@ -27,10 +27,15 @@ def signin_view(request):
 def signup_view(request):
     if request.method == 'POST':
         form = User_RegistrationForm(request.POST)
+        full_name = request.POST.get('full_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
+
+        if not full_name or not full_name.strip():
+            messages.error(request, 'Full name is required.')
+            return render(request, 'accounts/signup.html', {'form': form})
 
         if password1 != password2:
             messages.error(request, 'Passwords do not match.')
@@ -50,6 +55,7 @@ def signup_view(request):
 
         if form.is_valid():
             user = form.save()
+            UserProfile.objects.get_or_create(user=user, defaults={'full_name': user.full_name})
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, 'Account created successfully!')
             return redirect('home')
@@ -86,7 +92,7 @@ def signout_view(request):
 
 @login_required(login_url="signin")
 def profile_view(request):
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    profile, created = UserProfile.objects.get_or_create(user=request.user, defaults={'full_name': request.user.full_name})
     user_skills = UserSkill.objects.filter(user=request.user)
     context = {
         'profile': profile,
@@ -97,7 +103,7 @@ def profile_view(request):
 
 @login_required(login_url="signin")
 def edit_profile_view(request):
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    profile, created = UserProfile.objects.get_or_create(user=request.user, defaults={'full_name': request.user.full_name})
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
