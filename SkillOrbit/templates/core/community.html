@@ -24,11 +24,11 @@
             {% for topic in topics %}
             <div class="topic-card-item">
                 <div class="topic-card-body">
-                    <a href="{% url 'community_room' topic.id %}"></a>
-                    <h3 class="topic-item-title">
-                        {{ topic.title }}
-                    </h3>
-                    <p class="topic-item-description">{{ topic.description|truncatewords:30 }}</p>
+                    <a href="{% url 'community_room' topic.id %}">
+                        <h3 class="topic-item-title">
+                            {{ topic.title }}
+                        </h3>
+                        <p class="topic-item-description">{{ topic.description|truncatewords:30 }}</p>
                     </a>
                 </div>
 
