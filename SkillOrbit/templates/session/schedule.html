@@ -4,7 +4,7 @@
 {% block title %}Schedule Session · SkillOrbit{% endblock title %}
 
 {% block extrastyle %}
-<link rel="stylesheet" href="{% static 'css/session/schedule.css' %}?v=1.0">
+<link rel="stylesheet" href="{% static 'css/session/schedule.css' %}?v=4.0">
 {% endblock %}
 
 {% block content %}
@@ -28,7 +28,16 @@
                         {{ field.label }}
                         {% if field.field.required %}<span class="required-star">*</span>{% endif %}
                     </label>
-                    {{ field }}
+                    
+                    {% if field.name == 'time_scheduled' %}
+                        <div class="custom-input-with-icon">
+                            {{ field }}
+                            <i class="fas fa-calendar-alt input-calendar-icon"></i>
+                        </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+
                     {% if field.errors %}
                         <span class="field-error-msg"><i class="fas fa-circle-exclamation"></i> {{ field.errors.0 }}</span>
                     {% endif %}
@@ -47,4 +56,195 @@
 
     </div>
 </div>
+
+<!-- Custom Material 3 Date & Time Picker Modal (Firefox & Cross-Browser Compatible) -->
+<div class="custom-picker-modal-overlay" id="pickerModalOverlay" style="display: none;">
+    <div class="custom-picker-modal">
+        <div class="picker-modal-header">
+            <button type="button" class="btn-picker-nav" id="btnPrevMonth"><i class="fas fa-chevron-left"></i></button>
+            <span class="picker-month-title" id="pickerMonthTitle">August 2026</span>
+            <button type="button" class="btn-picker-nav" id="btnNextMonth"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Weekday Headers -->
+        <div class="picker-weekdays">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+
+        <!-- Days Grid -->
+        <div class="picker-days-grid" id="pickerDaysGrid"></div>
+
+        <!-- Time Picker Controls -->
+        <div class="picker-time-section">
+            <div class="time-label"><i class="fas fa-clock"></i> Select Time:</div>
+            <div class="time-controls-group">
+                <select id="pickerHourSelect" class="picker-time-select">
+                    <option value="01">01</option><option value="02">02</option><option value="03">03</option>
+                    <option value="04">04</option><option value="05">05</option><option value="06">06</option>
+                    <option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                    <option value="10">10</option><option value="11">11</option><option value="12" selected>12</option>
+                </select>
+                <span class="time-colon">:</span>
+                <select id="pickerMinuteSelect" class="picker-time-select">
+                    <option value="00" selected>00</option><option value="05">05</option><option value="10">10</option>
+                    <option value="15">15</option><option value="20">20</option><option value="25">25</option>
+                    <option value="30">30</option><option value="35">35</option><option value="40">40</option>
+                    <option value="45">45</option><option value="50">50</option><option value="55">55</option>
+                </select>
+                <select id="pickerAmpmSelect" class="picker-time-select">
+                    <option value="AM">AM</option>
+                    <option value="PM" selected>PM</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Past Date Error Notice -->
+        <div class="picker-error-notice" id="pickerErrorNotice" style="display: none;">
+            <i class="fas fa-triangle-exclamation"></i> Select time and date forward, don't choose the past time and date field.
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="picker-modal-actions">
+            <button type="button" class="btn-picker-cancel" id="btnPickerCancel">Cancel</button>
+            <button type="button" class="btn-picker-confirm" id="btnPickerConfirm">Confirm & Apply</button>
+        </div>
+    </div>
+</div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const timeInput = document.getElementById('id_time_scheduled');
+    const overlay = document.getElementById('pickerModalOverlay');
+    const daysGrid = document.getElementById('pickerDaysGrid');
+    const monthTitle = document.getElementById('pickerMonthTitle');
+    const btnPrev = document.getElementById('btnPrevMonth');
+    const btnNext = document.getElementById('btnNextMonth');
+    const btnCancel = document.getElementById('btnPickerCancel');
+    const btnConfirm = document.getElementById('btnPickerConfirm');
+    const hourSelect = document.getElementById('pickerHourSelect');
+    const minuteSelect = document.getElementById('pickerMinuteSelect');
+    const ampmSelect = document.getElementById('pickerAmpmSelect');
+    const errorNotice = document.getElementById('pickerErrorNotice');
+
+    if (!timeInput || !overlay) return;
+
+    let currentDate = new Date();
+    let displayYear = currentDate.getFullYear();
+    let displayMonth = currentDate.getMonth();
+    let selectedDay = currentDate.getDate();
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    function openModal() {
+        overlay.style.display = 'flex';
+        renderCalendar();
+    }
+
+    function closeModal() {
+        overlay.style.display = 'none';
+        errorNotice.style.display = 'none';
+    }
+
+    // Open on input click
+    timeInput.addEventListener('click', openModal);
+    const triggerIcon = timeInput.parentElement.querySelector('.input-calendar-icon');
+    if (triggerIcon) triggerIcon.addEventListener('click', openModal);
+
+    btnCancel.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+    });
+
+    btnPrev.addEventListener('click', function() {
+        displayMonth--;
+        if (displayMonth < 0) {
+            displayMonth = 11;
+            displayYear--;
+        }
+        renderCalendar();
+    });
+
+    btnNext.addEventListener('click', function() {
+        displayMonth++;
+        if (displayMonth > 11) {
+            displayMonth = 0;
+            displayYear++;
+        }
+        renderCalendar();
+    });
+
+    function renderCalendar() {
+        monthTitle.textContent = `${monthNames[displayMonth]} ${displayYear}`;
+        daysGrid.innerHTML = '';
+
+        const firstDayIndex = new Date(displayYear, displayMonth, 1).getDay();
+        const totalDays = new Date(displayYear, displayMonth + 1, 0).getDate();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Blank days padding
+        for (let i = 0; i < firstDayIndex; i++) {
+            const blank = document.createElement('div');
+            blank.className = 'picker-day-cell empty';
+            daysGrid.appendChild(blank);
+        }
+
+        // Active Month Days
+        for (let d = 1; d <= totalDays; d++) {
+            const dayCell = document.createElement('button');
+            dayCell.type = 'button';
+            dayCell.className = 'picker-day-cell';
+            dayCell.textContent = d;
+
+            const thisDate = new Date(displayYear, displayMonth, d);
+
+            if (thisDate < today) {
+                dayCell.classList.add('disabled');
+            } else {
+                if (d === selectedDay && displayMonth === currentDate.getMonth() && displayYear === currentDate.getFullYear()) {
+                    dayCell.classList.add('selected');
+                }
+
+                dayCell.addEventListener('click', function() {
+                    document.querySelectorAll('.picker-day-cell').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedDay = d;
+                    errorNotice.style.display = 'none';
+                });
+            }
+
+            daysGrid.appendChild(dayCell);
+        }
+    }
+
+    btnConfirm.addEventListener('click', function() {
+        let hour = parseInt(hourSelect.value, 10);
+        const minute = minuteSelect.value;
+        const ampm = ampmSelect.value;
+
+        if (ampm === 'PM' && hour < 12) hour += 12;
+        if (ampm === 'AM' && hour === 12) hour = 0;
+
+        const chosenDate = new Date(displayYear, displayMonth, selectedDay, hour, parseInt(minute, 10));
+        const now = new Date();
+
+        if (chosenDate < now) {
+            errorNotice.style.display = 'block';
+            return;
+        }
+
+        // Format ISO datetime string for Django: YYYY-MM-DD HH:MM
+        const formattedYear = displayYear;
+        const formattedMonth = String(displayMonth + 1).padStart(2, '0');
+        const formattedDay = String(selectedDay).padStart(2, '0');
+        const formattedHour = String(chosenDate.getHours()).padStart(2, '0');
+        const formattedMinute = String(chosenDate.getMinutes()).padStart(2, '0');
+
+        timeInput.value = `${formattedYear}-${formattedMonth}-${formattedDay}T${formattedHour}:${formattedMinute}`;
+        closeModal();
+    });
+});
+</script>
+{% endblock extra_js %}

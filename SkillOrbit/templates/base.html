@@ -25,6 +25,7 @@
 <body>
 
   <!-- ===== MATERIAL 3 TOP APP BAR ===== -->
+  {% block header_nav %}
   <header class="md-top-app-bar" role="banner">
     <div class="md-app-bar-inner">
       
@@ -123,6 +124,12 @@
             </a>
           </li>
           <li>
+            <a href="{% url 'course_list' %}" class="md-nav-item" data-nav="courses">
+              <div class="md-nav-indicator"><i class="fas fa-play-circle"></i></div>
+              <span class="md-nav-label">Cohorts</span>
+            </a>
+          </li>
+          <li>
             <a href="{% url 'all_skill_requests' %}" class="md-nav-item" data-nav="requests">
               <div class="md-nav-indicator"><i class="fas fa-handshake"></i></div>
               <span class="md-nav-label">
@@ -160,6 +167,7 @@
 
     </div>
   </header>
+  {% endblock %}
 
   <!-- ===== MAIN CONTENT AREA ===== -->
   <main class="md-main-content" role="main">
@@ -193,6 +201,7 @@
   </main>
 
   <!-- ===== BOTTOM NAVIGATION BAR (Mobile Only - Material 3 Style) ===== -->
+  {% block bottom_nav %}
   <nav class="md-bottom-nav" role="navigation" aria-label="Bottom Navigation">
     <div class="md-bottom-nav-inner">
       
@@ -224,6 +233,13 @@
         <span>Community</span>
       </a>
       
+      <a href="{% url 'course_list' %}" class="md-bottom-nav-item" data-nav="courses" aria-label="Cohorts">
+        <div class="md-bottom-nav-icon-wrapper">
+          <i class="fas fa-play-circle" aria-hidden="true"></i>
+        </div>
+        <span>Cohorts</span>
+      </a>
+      
       <a href="{% url 'all_skill_requests' %}" class="md-bottom-nav-item" data-nav="requests" aria-label="Skill Requests">
         <div class="md-bottom-nav-icon-wrapper">
           <i class="fas fa-handshake" aria-hidden="true"></i>
@@ -236,8 +252,10 @@
       
     </div>
   </nav>
+  {% endblock %}
 
   <!-- ===== FOOTER (Desktop Only) ===== -->
+  {% block footer %}
   <footer class="md-footer" role="contentinfo">
     <div class="md-footer-inner">
       <p>
@@ -257,6 +275,7 @@
       </div>
     </div>
   </footer>
+  {% endblock %}
 
   <!-- ===== JAVASCRIPT ===== -->
   <script>

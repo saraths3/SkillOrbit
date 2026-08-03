@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Episode · {{ course.title }}{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/course/course.css' %}?v=1.0">
+{% endblock %}
+
+{% block content %}
+<div class="course-form-wrapper">
+    <div class="course-form-card">
+        
+        <div class="form-card-header">
+            <a href="{% url 'course_detail' course.id %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+            <h1><i class="fas fa-plus-circle"></i> Add Video Episode</h1>
+            <p>Add Episode part for course: <strong>{{ course.title }}</strong></p>
+        </div>
+
+        <form method="post" class="course-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                        {% if field.field.required %}<span class="required-star">*</span>{% endif %}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <span class="field-error-msg"><i class="fas fa-circle-exclamation"></i> {{ field.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" name="add_another" value="1" class="btn-submit-course secondary">
+                    <i class="fas fa-plus"></i> Save & Add Another Episode
+                </button>
+                <button type="submit" class="btn-submit-course">
+                    <i class="fas fa-check"></i> Save & Watch Course
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock content %}

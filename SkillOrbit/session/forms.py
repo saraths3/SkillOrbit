@@ -1,21 +1,24 @@
 from django import forms
+from django.utils import timezone
 from .models import ScheduleSession
 
 class ScheduleSessionForm(forms.ModelForm):
-    class Meta():
+    class Meta:
         model = ScheduleSession
-        fields = ['name', 'description', 'meeting_link', 'time_scheduled']
+        fields = ['name', 'description', 'time_scheduled', 'meeting_link']
         widgets = {
             'time_scheduled': forms.DateTimeInput(attrs={
-                'type': 'datetime-local',
-                'class': 'form-control'
+                'type': 'text',
+                'class': 'form-control custom-picker-trigger',
+                'placeholder': 'Click to select Date & Time...',
+                'readonly': 'readonly',
             }),
             'name': forms.TextInput(attrs={
-                'placeholder': 'Title',
+                'placeholder': 'Title (e.g. Django Pair Programming)',
                 'class': 'form-control'
             }),
             'description': forms.Textarea(attrs={
-                'placeholder': 'Description',
+                'placeholder': 'Session details...',
                 'rows': 3,
                 'class': 'form-control'
             }),
@@ -24,3 +27,9 @@ class ScheduleSessionForm(forms.ModelForm):
                 'class': 'form-control'
             })
         }
+
+    def clean_time_scheduled(self):
+        time_scheduled = self.cleaned_data.get('time_scheduled')
+        if time_scheduled and time_scheduled < timezone.now():
+            raise forms.ValidationError("Select time and date forward, don't choose the past time and date field.")
+        return time_scheduled

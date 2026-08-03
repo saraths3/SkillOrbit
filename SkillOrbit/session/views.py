@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 
+from datetime import datetime
+
 User = get_user_model()
 
 @login_required(login_url="signin")
@@ -20,8 +22,10 @@ def ScheduleSessionView(request, user_id=None):
             session_obj.host = request.user
             if participant:
                 session_obj.participant = participant
+
             if not session_obj.meeting_link:
-                session_obj.meeting_link = f"https://meet.jit.si/SkillOrbit-{session_obj.id or 'Session'}-{request.user.username}"
+                session_obj.meeting_link = f"https://meet.jit.si/SkillOrbit-Session-{request.user.username}"
+
             session_obj.save()
             messages.success(request, f"Learning session scheduled with @{session_obj.participant.username}!")
             return redirect('sessions')

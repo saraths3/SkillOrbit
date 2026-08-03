@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ cohort.title }} · 1-on-1 Cohort Video Exchange{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/course/course.css' %}?v=4.0">
+{% endblock %}
+
+{% block content %}
+<div class="course-detail-wrapper">
+    
+    <!-- Top Back Bar -->
+    <div class="player-top-bar">
+        <a href="{% url 'course_list' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> All Cohorts
+        </a>
+        <div class="course-header-text">
+            <h1>{{ cohort.title }}</h1>
+            <span class="instructor-tag">
+                Host: @{{ cohort.host.username }} ➔ Candidate: @{{ cohort.participant.username|default:"Peer" }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Video & Shared Playlist Grid Layout -->
+    <div class="player-grid-layout">
+        
+        <!-- Left Video Player Frame & Video Upload Section -->
+        <div class="video-player-container">
+            {% if active_video %}
+                <div class="responsive-video-wrapper">
+                    <iframe 
+                        src="{{ embed_url }}" 
+                        title="{{ active_video.title }}" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="lesson-details-card">
+                    <div class="lesson-badge">
+                        Now Playing · Shared by @{{ active_video.shared_by.username|default:"Peer" }}
+                    </div>
+                    <h2>{{ active_video.title }}</h2>
+                    <p class="course-desc-text">{{ cohort.description|default:"No cohort notes provided." }}</p>
+                </div>
+            {% else %}
+                <div class="no-lessons-placeholder">
+                    <i class="fas fa-film"></i>
+                    <h3>No Videos Shared in this Cohort Yet</h3>
+                    <p>Both Host and Candidate can post YouTube tutorial links below to share video notes!</p>
+                </div>
+            {% endif %}
+
+            <!-- Add Video to Cohort Form Card -->
+            <div class="add-video-card">
+                <h3><i class="fas fa-plus-circle"></i> Share Video into this 1-on-1 Cohort</h3>
+                <form method="post" class="inline-video-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Video Title</label>
+                        {{ form.title }}
+                    </div>
+                    <div class="form-group">
+                        <label>YouTube Link</label>
+                        {{ form.video_url }}
+                    </div>
+                    <button type="submit" class="btn-submit-course">
+                        <i class="fas fa-cloud-arrow-up"></i> Share Video to Cohort
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Shared Video Playlist Sidebar -->
+        <div class="playlist-sidebar">
+            <div class="playlist-header">
+                <h3><i class="fas fa-list-ol"></i> Shared Videos ({{ videos.count }})</h3>
+            </div>
+            
+            <div class="playlist-items-scroll">
+                {% for vid in videos %}
+                    <a href="?video={{ vid.id }}" class="playlist-item {% if active_video and active_video.id == vid.id %}active{% endif %}">
+                        <div class="playlist-ep-number"><i class="fas fa-video"></i></div>
+                        <div class="playlist-item-info">
+                            <h4>{{ vid.title }}</h4>
+                            <span class="ep-status">
+                                By @{{ vid.shared_by.username|default:"Peer" }}
+                            </span>
+                        </div>
+                    </a>
+                {% empty %}
+                    <div class="empty-playlist-text">No videos shared yet. Post a video link above!</div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock content %}

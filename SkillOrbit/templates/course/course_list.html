@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Video Courses · SkillOrbit{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/course/course.css' %}?v=6.0">
+{% endblock %}
+
+{% block content %}
+<div class="course-container">
+    
+    <!-- Header Banner -->
+    <div class="course-header-banner">
+        <div class="header-info">
+            <h1><i class="fas fa-play-circle"></i> Community Video Courses</h1>
+            <p>Watch video tutorials published by SkillOrbit community members.</p>
+        </div>
+        <a href="{% url 'create_course' %}" class="btn-create-course">
+            <i class="fas fa-plus"></i> Upload a Video Course
+        </a>
+    </div>
+
+    <!-- Public Video Cards Grid with YouTube Thumbnail Cards -->
+    {% if courses %}
+        <div class="course-grid">
+            {% for course in courses %}
+                <div class="course-card">
+                    
+                    <!-- Video Thumbnail Wrapper -->
+                    <div class="video-preview-wrapper thumbnail-card-wrapper">
+                        {% if course.thumbnail_url %}
+                            <img src="{{ course.thumbnail_url }}" alt="{{ course.title }}" class="yt-thumbnail-img">
+                            <a href="{{ course.video_url }}" target="_blank" rel="noopener" class="play-overlay-btn" aria-label="Play Video on YouTube">
+                                <i class="fas fa-play"></i>
+                            </a>
+                        {% else %}
+                            <div class="video-fallback-wrapper">
+                                <i class="fas fa-video"></i>
+                                <span>Video Tutorial</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="course-card-body">
+                        <div class="course-user-badge">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Uploaded by @{{ course.user.username|default:"Community Member" }}</span>
+                        </div>
+                        
+                        <h2 class="course-title">{{ course.title }}</h2>
+                        <p class="course-description">{{ course.description|default:"No description provided."|truncatewords:20 }}</p>
+                        
+                        <div class="course-card-footer">
+                            <span class="meta-item"><i class="far fa-clock"></i> {{ course.created_at|date:"M d, Y" }}</span>
+                            {% if course.video_url %}
+                                <a href="{{ course.video_url }}" target="_blank" rel="noopener" class="btn-open-yt">
+                                    <i class="fab fa-youtube"></i> Watch on YouTube
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-courses-state">
+            <div class="empty-icon"><i class="fas fa-video-slash"></i></div>
+            <h3>No Video Courses Uploaded Yet</h3>
+            <p>Be the first to upload a video course for the community!</p>
+            <a href="{% url 'create_course' %}" class="btn-create-course-empty">
+                <i class="fas fa-plus"></i> Upload First Course
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock content %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Upload Video Course · SkillOrbit{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/course/course.css' %}?v=5.0">
+{% endblock %}
+
+{% block content %}
+<div class="course-form-wrapper">
+    <div class="course-form-card">
+        
+        <!-- Header -->
+        <div class="form-card-header">
+            <a href="{% url 'course_list' %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Courses
+            </a>
+            <div class="header-title-group">
+                <div class="header-icon-badge">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div>
+                    <h1>Upload Video Course</h1>
+                    <p>Share a YouTube video tutorial with the SkillOrbit community.</p>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" class="course-form">
+            {% csrf_token %}
+
+            <!-- Title Field -->
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">
+                    Course Title <span class="required-star">*</span>
+                </label>
+                <div class="input-with-icon">
+                    <i class="fas fa-heading field-icon"></i>
+                    {{ form.title }}
+                </div>
+                {% if form.title.errors %}
+                    <span class="field-error-msg"><i class="fas fa-circle-exclamation"></i> {{ form.title.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">
+                    Description
+                </label>
+                <div class="input-with-icon textarea-icon-wrapper">
+                    <i class="fas fa-align-left field-icon"></i>
+                    {{ form.description }}
+                </div>
+                {% if form.description.errors %}
+                    <span class="field-error-msg"><i class="fas fa-circle-exclamation"></i> {{ form.description.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <!-- YouTube Video URL Field -->
+            <div class="form-group">
+                <label for="{{ form.video_url.id_for_label }}">
+                    YouTube Video Link <span class="required-star">*</span>
+                </label>
+                <div class="input-with-icon">
+                    <i class="fab fa-youtube field-icon yt-icon"></i>
+                    {{ form.video_url }}
+                </div>
+                {% if form.video_url.errors %}
+                    <span class="field-error-msg"><i class="fas fa-circle-exclamation"></i> {{ form.video_url.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn-submit-course">
+                    <i class="fas fa-cloud-arrow-up"></i> Publish Video Course
+                </button>
+                <a href="{% url 'course_list' %}" class="btn-cancel-course">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock content %}

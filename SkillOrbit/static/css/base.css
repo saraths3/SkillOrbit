@@ -395,6 +395,9 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 24px;
+  flex: 1;
+  justify-content: space-between;
+  margin-left: 32px;
 }
 
 .md-nav-list {
@@ -402,7 +405,7 @@ a:hover {
   align-items: center;
   gap: 4px;
   list-style: none;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
 }
 

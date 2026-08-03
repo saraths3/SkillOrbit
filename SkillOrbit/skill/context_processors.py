@@ -10,4 +10,5 @@ def pending_request(request):
 def connection_context(request):
     if request.user.is_authenticated:
         connections = Connection.objects.filter(Q(user_one=request.user) | Q(user_two=request.user))
-    return {'connections': connections,}
+        return {'connections': connections}
+    return {'connections': []}
