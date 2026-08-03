@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load socialaccount %}
 
 {% block title %}Sign In · SkillOrbit{% endblock %}
 
@@ -39,7 +38,7 @@
           <span class="input-icon">
             <i class="fas fa-envelope"></i>
           </span>
-          <input type="email" id="email" name="email" placeholder="Email address" required autofocus>
+          <input type="email" id="email" name="email" value="{{ email|default:'' }}" placeholder="Email address" required autofocus>
         </div>
       </div>
       
@@ -66,14 +65,6 @@
       <button type="submit" class="btn-submit">
         <i class="fas fa-sign-in-alt"></i> Sign In
       </button>
-
-      <div class="divider">
-        <span>or continue with</span>
-      </div>
-
-      <a href="{% provider_login_url 'google' %}" class="btn-google">
-        <i class="fab fa-google"></i> Sign in with Google
-      </a>
     </form>
 
     <div class="auth-footer">

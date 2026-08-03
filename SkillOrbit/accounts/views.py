@@ -6,7 +6,7 @@ from django.contrib import messages
 from skill.models import UserSkill
 
 # Create your views here.
-#Registration
+# Registration
 
 def signin_view(request):
     if request.method == 'POST':
@@ -16,11 +16,12 @@ def signin_view(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             UserProfile.objects.get_or_create(user=user)
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, f'Welcome back, {user.username}!')
-            return redirect('explore') 
+            return redirect('home') 
         else:
             messages.error(request, "Invalid email or password.")
+            return render(request, 'accounts/signin.html', {'email': email, 'login_errors': True})
     return render(request, 'accounts/signin.html')
 
 def signup_view(request):
@@ -28,30 +29,39 @@ def signup_view(request):
         form = User_RegistrationForm(request.POST)
         username = request.POST.get('username')
         email = request.POST.get('email')
-        password2 = request.POST.get('password2')
         password1 = request.POST.get('password1')
-        if password1 != password2 :
-            messages.error(request, f'Passwords do not match.')
-            return redirect('signup')
+        password2 = request.POST.get('password2')
+
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'accounts/signup.html', {'form': form})
+
+        if len(password1 or '') < 8:
+            messages.error(request, 'Password must be at least 8 characters long.')
+            return render(request, 'accounts/signup.html', {'form': form})
+
         if CustomUser.objects.filter(email=email).exists():
-            messages.error(request, f'{email} already exists.')
-            return redirect('signup') 
+            messages.error(request, f'{email} is already registered.')
+            return render(request, 'accounts/signup.html', {'form': form})
+
         if CustomUser.objects.filter(username=username).exists():
-            messages.error(request, f'{username} is already taken.')
-            return redirect('signup')
+            messages.error(request, f'Username "{username}" is already taken.')
+            return render(request, 'accounts/signup.html', {'form': form})
+
         if form.is_valid():
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, 'Account created successfully!')
-            return redirect('profile')
+            return redirect('home')
         else:
-            messages.error(request, 'Failed to create account. Please check the form.')
+            for field, errors in form.errors.items():
+                for err in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {err}")
+            return render(request, 'accounts/signup.html', {'form': form})
     else:
         form = User_RegistrationForm()
-    context = {
-        'form': form
-    }
-    return render(request, 'accounts/signup.html', context)
+
+    return render(request, 'accounts/signup.html', {'form': form})
 
 def forgot_password_view(request):
     if request.method == 'POST':
@@ -72,7 +82,7 @@ def signout_view(request):
     messages.success(request, 'You have been logged out successfully.')
     return redirect('signin')
 
-#Profile
+# Profile
 
 @login_required(login_url="signin")
 def profile_view(request):
@@ -103,4 +113,3 @@ def edit_profile_view(request):
         "profile": profile,
     }
     return render(request, "accounts/edit_profile.html", context)
-
