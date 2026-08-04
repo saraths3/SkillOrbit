@@ -114,7 +114,7 @@ def All_Skill_Requests(request):
 @login_required(login_url='signin')
 def My_Skill_Requests(request):
     skill_requests = SkillRequest.objects.filter(from_user=request.user).order_by('-created_at')
-    return render(request, 'skill/my_requests.html', {'requests': skill_requests})
+    return render(request, 'skill/myrequests.html', {'requests': skill_requests})
 
 
 @login_required(login_url='signin')
