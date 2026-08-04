@@ -68,9 +68,7 @@ def skill_request(request):
     if not user_id:
         messages.error(request, 'No recipient user specified for skill request.')
         return redirect('explore')
-
     reciever_user = get_object_or_404(User, id=user_id)
-    
     if reciever_user == request.user:
         messages.error(request, 'You cannot send a skill request to yourself.')
         return redirect('public_profile', pp_id=reciever_user.id)
@@ -79,11 +77,7 @@ def skill_request(request):
     if existing_request:
         messages.error(request, f'You already have a pending skill request to {reciever_user.username}.')
         return redirect('public_profile', pp_id=reciever_user.id)
-
-    # 1. Get the exact skill IDs that reciever_user has listed in UserSkill
     user_skill_ids = UserSkill.objects.filter(user=reciever_user).values_list('skill_id', flat=True)
-
-    # 2. Filter Skill model to ONLY show those specific skills
     recipient_skills = Skill.objects.filter(id__in=user_skill_ids)
 
     if request.method == 'POST':
@@ -114,7 +108,7 @@ def skill_request(request):
 @login_required(login_url='signin')
 def All_Skill_Requests(request):
     skill_requests = SkillRequest.objects.filter(to_user=request.user).order_by('-created_at')
-    return render(request, 'skill/all_skill_request.html', {'requests': skill_requests})
+    return render(request, 'skill/requests.html', {'requests': skill_requests})
 
 
 @login_required(login_url='signin')
