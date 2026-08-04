@@ -102,20 +102,19 @@ def skill_request(request):
     if not user_id:
         messages.error(request, 'No recipient user specified for skill request.')
         return redirect('explore')
-
     reciever_user = get_object_or_404(User, id=user_id)
     
     if reciever_user == request.user:
         messages.error(request, 'You cannot send a skill request to yourself.')
         return redirect('public_profile', pp_id=reciever_user.id)
-        
     existing_request = SkillRequest.objects.filter(from_user=request.user, to_user=reciever_user, status='pending').first()
     if existing_request:
         messages.error(request, f'You already have a pending skill request to {reciever_user.username}.')
         return redirect('public_profile', pp_id=reciever_user.id)
-
+    recipient_skills = Skill.objects.filter(userskill__user=reciever_user)
     if request.method == 'POST':
         form = SkillRequestForm(request.POST)
+        form.fields['skill'].queryset = recipient_skills
         if form.is_valid():
             skill_req = form.save(commit=False)
             skill_req.from_user = request.user
@@ -127,6 +126,7 @@ def skill_request(request):
             messages.error(request, 'Failed to send skill request. Please check the form.')
     else:
         form = SkillRequestForm()
+        form.fields['skill'].queryset = recipient_skills
 
     context = {
         'form': form,

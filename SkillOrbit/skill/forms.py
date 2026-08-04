@@ -6,7 +6,8 @@ class UserSkillForm(forms.ModelForm):
         model = UserSkill
         fields = ('skill', 'proficiency', 'years_of_experience')
 
+
 class SkillRequestForm(forms.ModelForm):
     class Meta:
         model = SkillRequest
-        fields = ('skill','message')
+        fields = ('skill', 'message')
