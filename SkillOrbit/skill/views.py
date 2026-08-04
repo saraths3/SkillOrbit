@@ -80,10 +80,11 @@ def skill_request(request):
         messages.error(request, f'You already have a pending skill request to {reciever_user.username}.')
         return redirect('public_profile', pp_id=reciever_user.id)
 
-    # Filter dropdown to recipient user's skills (or fallback to all skills if recipient has none)
-    recipient_skills = Skill.objects.filter(userskill__user=reciever_user).distinct()
-    if not recipient_skills.exists():
-        recipient_skills = Skill.objects.all()
+    # 1. Get the exact skill IDs that reciever_user has listed in UserSkill
+    user_skill_ids = UserSkill.objects.filter(user=reciever_user).values_list('skill_id', flat=True)
+
+    # 2. Filter Skill model to ONLY show those specific skills
+    recipient_skills = Skill.objects.filter(id__in=user_skill_ids)
 
     if request.method == 'POST':
         form = SkillRequestForm(request.POST)
@@ -104,7 +105,8 @@ def skill_request(request):
     context = {
         'form': form,
         'user_id': user_id,
-        'reciever_user': reciever_user
+        'reciever_user': reciever_user,
+        'has_skills': recipient_skills.exists()
     }
     return render(request, 'skill/skill_request.html', context)
 
