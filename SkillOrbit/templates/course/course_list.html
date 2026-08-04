@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Video Courses · SkillOrbit{% endblock title %}
+{% block title %}Connections Video Courses · SkillOrbit{% endblock title %}
 
 {% block extrastyle %}
-<link rel="stylesheet" href="{% static 'css/course/course.css' %}?v=6.0">
+<link rel="stylesheet" href="{% static 'css/course/course.css' %}?v=7.0">
 {% endblock %}
 
 {% block content %}
@@ -13,15 +13,15 @@
     <!-- Header Banner -->
     <div class="course-header-banner">
         <div class="header-info">
-            <h1><i class="fas fa-play-circle"></i> Community Video Courses</h1>
-            <p>Watch video tutorials published by SkillOrbit community members.</p>
+            <h1><i class="fas fa-play-circle"></i> Network Video Courses</h1>
+            <p>Watch video tutorials shared by you and your active connections.</p>
         </div>
         <a href="{% url 'create_course' %}" class="btn-create-course">
             <i class="fas fa-plus"></i> Upload a Video Course
         </a>
     </div>
 
-    <!-- Public Video Cards Grid with YouTube Thumbnail Cards -->
+    <!-- Network Video Cards Grid -->
     {% if courses %}
         <div class="course-grid">
             {% for course in courses %}
@@ -45,7 +45,7 @@
                     <div class="course-card-body">
                         <div class="course-user-badge">
                             <i class="fas fa-user-circle"></i>
-                            <span>Uploaded by @{{ course.user.username|default:"Community Member" }}</span>
+                            <span>Uploaded by @{{ course.user.username|default:"Connection" }}</span>
                         </div>
                         
                         <h2 class="course-title">{{ course.title }}</h2>
@@ -66,8 +66,8 @@
     {% else %}
         <div class="empty-courses-state">
             <div class="empty-icon"><i class="fas fa-video-slash"></i></div>
-            <h3>No Video Courses Uploaded Yet</h3>
-            <p>Be the first to upload a video course for the community!</p>
+            <h3>No Connection Videos Shared Yet</h3>
+            <p>Connect with peers or upload a video course to share with your network!</p>
             <a href="{% url 'create_course' %}" class="btn-create-course-empty">
                 <i class="fas fa-plus"></i> Upload First Course
             </a>
