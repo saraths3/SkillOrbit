@@ -4,7 +4,8 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from .models import UserSkill, SkillRequest, Skill, Connection
 from .forms import UserSkillForm, SkillRequestForm
-
+from django.db import models
+from django.db.models import Q
 
 @login_required(login_url='signin')
 def add_skills(request):
@@ -138,8 +139,5 @@ def My_Connection(request):
             
         return redirect('all_skill_requests')
 
-    user_connections = Connection.objects.filter(
-        models.Q(user_one=request.user) | models.Q(user_two=request.user)
-    ).select_related('user_one', 'user_two')
-
+    user_connections = Connection.objects.filter(Q(user_one=request.user) | Q(user_two=request.user)).select_related('user_one', 'user_two')
     return render(request, 'skill/connections.html', {'connections': user_connections})
